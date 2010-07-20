@@ -1,15 +1,15 @@
 module MARCSpec
-  class KVMap   
-    def initialize(map, default=nil)
-      @default = default
+  class KVMap 
+    def initialize(map)
       @map = map
-      unless (@default.nil?)
-        @map.default = @default
-      end
     end
     
-    def [] key
-      @map[key]
+    def [] key, default=nil
+      if @map.has_key? key
+        @map[key]
+      else
+        default
+      end
     end
   end
 end

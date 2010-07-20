@@ -4,8 +4,7 @@ module MARCSpec
   # [thingToMatch, 'Value'] (or [thingToMatch, [array,of,values]])
   #
   # Accessing via [] will give you an array of non-nil values that match (via ===)
-  # the corresponding keys. A default value (for accesses which don't match
-  # any patterns) can be provided at initialization
+  # the corresponding keys.
   #
   # Keys can be either strings or regular expressions (e.g., /^Bil/). 
   #
@@ -22,16 +21,11 @@ module MARCSpec
     # @param [String, Array<String>] default The default value to return if no pattern matches. Default is none
     # @return [Array] An array of values from matched patterns, flattened and with nils removed. Can be an empty array.
     
-    def initialize(kvlist, default=[])
+    def initialize(kvlist)
       @kvlist = kvlist
-      if default.is_a? Array
-        @default = default
-      else
-        @default = [default]
-      end
     end
 
-    def [] key
+    def [] key, default=nil
       rv =  @kvlist.map {|pv| pv[0] === key ? pv[1] : nil}
       rv.flatten!
       rv.compact!
@@ -39,7 +33,7 @@ module MARCSpec
       if rv.size > 0
         return rv
       else
-        return @default
+        return default
       end
     end
   end
