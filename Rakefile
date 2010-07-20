@@ -13,10 +13,7 @@ begin
     gem.add_development_dependency "bacon", ">= 0"
     gem.add_development_dependency "yard", ">= 0"
 
-    gem.add_development_dependency 'marc4j4r', '>=0.1.0'
-
-    gem.add_dependency 'set'
-    gem.add_dependency 'logger'
+    gem.add_dependency 'marc4j4r', '>=0.1.0'
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
