@@ -72,7 +72,11 @@ describe "VariableFieldSpec" do
     a = MARCSpec::VariableFieldSpec.new('700', 'a').marc_values(@one)
     a.should.equal ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
   end
-  
-  
-  
 end
+
+describe "SolrFieldSpec" do
+  before do 
+    @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
+    # @batch = MARC4J4R::Reader.new("#{DIR}/batch.dat").collect
+  end
+    

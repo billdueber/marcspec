@@ -1,0 +1,6 @@
+require "marcspec/customspec"
+require "marcspec/solrfieldspec"
+require "marcspec/kvmap"
+require "marcspec/multivaluemap"
+require "marcspec/specset"
+require "marcspec/marcfieldspec"
