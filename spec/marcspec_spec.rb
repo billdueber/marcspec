@@ -18,7 +18,7 @@ require 'spec_helper'
 # 852    $a American Folklife Center, Library of Congress
 # 852    $a DLC
 
-describe "ControlTagSpec" do
+describe "ControlFieldSpec" do
 
   before do
     @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
@@ -27,21 +27,52 @@ describe "ControlTagSpec" do
 
   
   it "gets a single full value" do
-    cts = MARCSpec::ControlTagSpec.new('001')
-    cts.marc_values(@one).should.equal ["afc99990058366"]    
+    cfs = MARCSpec::ControlFieldSpec.new('001')
+    cfs.marc_values(@one).should.equal ["afc99990058366"]    
   end
   
   it "gets a single character" do
-    cts = MARCSpec::ControlTagSpec.new('001', 10 )
-    cts.marc_values(@one).should.equal ['5']
+    cfs = MARCSpec::ControlFieldSpec.new('001', 10 )
+    cfs.marc_values(@one).should.equal ['5']
   end
   
   it "gets a range of characters" do
-    cts = MARCSpec::ControlTagSpec.new('001', 10..14 )
-    cts.marc_values(@one).should.equal ['58366']
+    cfs = MARCSpec::ControlFieldSpec.new('001', 10..14 )
+    cfs.marc_values(@one).should.equal ['58366']
+  end
+end
+
+describe "VariableFieldSpec" do
+  before do
+    @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
+    # @batch = MARC4J4R::Reader.new("#{DIR}/batch.dat").collect
+  end
+
+  it "Should get a whole field separated by spaces" do
+    dfs = MARCSpec::VariableFieldSpec.new('260')
+    dfs.marc_values(@one).should.equal ["Medina, Texas, 1939."]
+  end
+
+  it "Should get just the $a" do
+    dfs = MARCSpec::VariableFieldSpec.new('260', 'a')
+    dfs.marc_values(@one).should.equal ["Medina, Texas,"]
+  end
+  
+  it "Should get all fields via several equal routes" do
+    a = MARCSpec::VariableFieldSpec.new('260').marc_values(@one)
+    ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c']).marc_values(@one)
+    ca =  MARCSpec::VariableFieldSpec.new('260', ['c', 'a']).marc_values(@one)
+    allrange = MARCSpec::VariableFieldSpec.new('260', 'a'..'z').marc_values(@one)
+    a.should.equal ac
+    ac.should.equal ca
+    ca.should.equal allrange
+  end
+  
+  it "should get all three 700a's" do
+    a = MARCSpec::VariableFieldSpec.new('700', 'a').marc_values(@one)
+    a.should.equal ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
   end
   
   
-    
   
 end
