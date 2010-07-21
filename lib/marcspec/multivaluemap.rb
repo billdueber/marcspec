@@ -2,6 +2,7 @@ module MARCSpec
 
   # A MultiValueMap (in this conectex) is an array of duples of the form
   # [thingToMatch, 'Value'] (or [thingToMatch, [array,of,values]])
+  # along with an associated name.
   #
   # Accessing via [] will give you an array of non-nil values that match (via ===)
   # the corresponding keys.
@@ -11,6 +12,8 @@ module MARCSpec
   # Again, note that if several keys are == to the passed argument, all the values will be returned. 
   
   class MultiValueMap   
+    
+    attr_accessor :mapname
 
     # Createa new MultiValueMap from an array of duples and an optional default
     # value (which itself can be an array of strings)
@@ -21,7 +24,8 @@ module MARCSpec
     # @param [String, Array<String>] default The default value to return if no pattern matches. Default is none
     # @return [Array] An array of values from matched patterns, flattened and with nils removed. Can be an empty array.
     
-    def initialize(kvlist)
+    def initialize(mapname, kvlist)
+      @mapname = mapname
       @kvlist = kvlist
     end
 
@@ -35,6 +39,10 @@ module MARCSpec
       else
         return default
       end
+    end
+    
+    def pretty_print pp
+      pp.pp @kvlist
     end
   end
 end

@@ -1,5 +1,6 @@
 require 'marc4j4r'
 require 'set'
+require 'pp'
 module MARCSpec
 
   # A ControlFieldSpec takes a control tag (generally 001..009) and an optional 1-based range
@@ -18,29 +19,39 @@ module MARCSpec
   # to make translation from MARC documentation as easy as possible.
   
   class ControlFieldSpec
-    attr_accessor :tag, :range
+    attr_accessor :tag
+    attr_writer :range
     
     def initialize (tag, range=nil)
       unless MARC4J4R::ControlField.control_tag? tag
         raise ArgumentError "Tag must be a control tag"
       end
       @tag = tag
-      return if range.nil?
+      self.range = range
       
+    end
+    
+    def range= range
+      @unalteredRange = range
+      if range.nil?
+        @range = nil
+        return nil
+      end
       if range.is_a? Fixnum
         if range < 1
           raise ArgumentError, "Range must be nil, an integer offset (1-based), or a Range, not #{range}"
         end
-        
+      
         range = range - 1
         @range = range..range
-        
+      
       elsif range.is_a? Range
         @range = Range.new(range.first - 1, range.last - 1)
       else
         raise ArgumentError, "Range must be nil, an integer offset (1-based), or a Range, not #{range.inspect}"
       end
     end
+    
     
     def marc_values r
       vals = r.find_by_tag(@tag).map {|f| f.value}
@@ -50,6 +61,15 @@ module MARCSpec
         return vals
       end
     end
+    
+    def pretty_print pp
+      if @unalteredRange
+        pp.pp [@tag, @unalteredRange]
+      else
+        pp.pp [@tag]
+      end
+    end
+    
   end
   
   # A VariableFieldSpec has a tag (three chars) and a set of codes. Its #marc_values(r) method will return
@@ -67,6 +87,7 @@ module MARCSpec
   class VariableFieldSpec
     
     attr_accessor :tag, :codes, :joiner
+    
     def initialize tag, codes=nil, joiner=' '
       @tag = tag
       @joiner = joiner
@@ -96,6 +117,14 @@ module MARCSpec
         vals << subvals.join(@joiner) if subvals.size > 0
       end
       return vals
+    end
+
+    def pretty_print pp
+      if @joiner == ' '
+        pp.pp [@tag, '*', '*', @codes]
+      else
+        pp.pp [@tag, '*', '*', @codes, @joiner]
+      end
     end
 
   end
