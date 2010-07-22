@@ -13,13 +13,13 @@ describe "Maps" do
   
   it "should round-trip a kvmap" do
     s = @kvmap.asPPString
-    newkvmap = MARCSpec::KVMap.fromPPString eval(s)
+    newkvmap = MARCSpec::KVMap.fromPPString s
     newkvmap.should.equal @kvmap
   end
   
   it "should round trip a multivaluemap" do 
     s = @mvmap.asPPString
-    newmvmap = MARCSpec::MultiValueMap.fromPPString eval(s)
+    newmvmap = MARCSpec::MultiValueMap.fromPPString s
     newmvmap.should.equal @mvmap
   end
   
