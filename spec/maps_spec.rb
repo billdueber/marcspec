@@ -36,7 +36,7 @@ describe "Maps" do
     map['HATCH DOCS'].should.equal ['Hatcher Graduate', 'Hatcher Graduate Documents Center']
   end
   
-  it "can dump/load a kv map" do
+  it "can dump/load a kv map via generic map interface" do
     map = MARCSpec::KVMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/country_map.properties"
     f = Tempfile.new('kvmap')
     f.puts map.asPPString
@@ -48,7 +48,7 @@ describe "Maps" do
     map.should.equal map2
   end
 
-  it "can dump/load a multivalue map" do
+  it "can dump/load a multivalue map via generic map interface" do
     map = MARCSpec::MultiValueMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/library_map.properties"
     f = Tempfile.new('mvmap')
     f.puts map.asPPString
