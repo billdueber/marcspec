@@ -35,7 +35,7 @@ module MARCSpec
     
     # Take the output of pretty_print and eval it to get rawmap; pass it
     # here to get the map object
-    def self.fromHash rawmap
+    def self.fromPPString rawmap
       return self.new(rawmap[:mapname], rawmap[:map])
     end
         

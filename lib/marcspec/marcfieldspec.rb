@@ -19,8 +19,7 @@ module MARCSpec
   # to make translation from MARC documentation as easy as possible.
   
   class ControlFieldSpec
-    attr_accessor :tag
-    attr_writer :range
+    attr_accessor :tag, :range
     
     def initialize (tag, range=nil)
       unless MARC4J4R::ControlField.control_tag? tag
@@ -80,6 +79,11 @@ module MARCSpec
         PP.pp([@tag], s)
       end
       return s.string
+    end
+    
+    def self.fromPPString str
+      a = eval(str)
+      return self.new(*a)
     end
     
   end
@@ -143,13 +147,14 @@ module MARCSpec
     
     def asPPString
       s = StringIO.new
-      if @joiner == ' '
-        PP.singleline_pp([@tag, '*', '*', @codes], s)
-      else
-        PP.singleline_pp([@tag, '*', '*', @codes, @joiner], s)
-      end
+      PP.singleline_pp([@tag, '*', '*', @codes, @joiner], s)
       return s.string
     end
+
+   def self.fromPPString str
+     a = eval(str)
+     return self.new(a[0], a[3], a[4])
+   end
 
   end
   

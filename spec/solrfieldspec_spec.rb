@@ -103,7 +103,7 @@ describe "MARCFieldSpec" do
     sfs << @titleAC # not in map, get noMapKeyDefault
     sfs << @twosixtyC # in map, get mapValue
     
-    newsfs = MARCSpec::SolrFieldSpec.fromHash(eval(sfs.asPPString))
+    newsfs = MARCSpec::SolrFieldSpec.fromPPString(eval(sfs.asPPString))
     newsfs.map = @map
     sfs.should.equal newsfs
   end

@@ -61,7 +61,7 @@ module MARCSpec
              (other.tagspecs == self.tagspecs))
     end
     
-    def self.fromHash h
+    def self.fromPPString h
       sfs = self.new(h)
       h[:specs].each do |s|
         if s.size < 3 

@@ -41,7 +41,11 @@ describe "ControlFieldSpec" do
     cfs.marc_values(@one).should.equal ['58366']
   end
   
-  
+  it "should round trip" do
+    cfs = MARCSpec::ControlFieldSpec.new('001', 10..14 )
+    cfs2 = MARCSpec::ControlFieldSpec.fromPPString(cfs.asPPString)
+    cfs.should.equal cfs2
+  end
     
 end
 
@@ -75,4 +79,11 @@ describe "VariableFieldSpec" do
     a = MARCSpec::VariableFieldSpec.new('700', 'a').marc_values(@one)
     a.should.equal ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
   end
+  
+  it "should round trip" do 
+    ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c'])
+    ac2 = MARCSpec::VariableFieldSpec.fromPPString(ac.asPPString)
+    ac.should.equal ac2
+  end
+  
 end
