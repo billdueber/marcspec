@@ -32,6 +32,18 @@ module MARCSpec
       end
     end
     
+    def self.from_solrmarc_file filename
+      mapname = File.basename(filename).sub(/\..+?$/, '')
+      kvlist = []
+      File.open(filename) do |f|
+        f.each_line do |line|
+          match = /^.*?=\s*(.*?)\s*=>\s*(.*?)\s*$/.match(line)
+          next unless match ### should log an error
+          kvlist << [Regexp.new(match[1]), match[2]]
+        end
+      end
+      return self.new(mapname, kvlist)
+    end
         
     def asPPString
       s = StringIO.new

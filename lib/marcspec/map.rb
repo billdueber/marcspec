@@ -14,11 +14,15 @@ module MARCSpec
       pp.pp eval(self.asPPString)
     end
     
+    def self.fromHash rawmap
+      return self.new(rawmap[:mapname], rawmap[:map])
+    end
+    
     # Take the output of pretty_print and eval it to get rawmap; pass it
-    # here to get the map object
+    # tp fromHash to get the map object
     def self.fromPPString str
       rawmap = eval(str)
-      return self.new(rawmap[:mapname], rawmap[:map])
+      return self.fromHash rawmap
     end
     
   end

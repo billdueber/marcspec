@@ -80,8 +80,8 @@ describe "MARCFieldSpec" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC # not in map, get noMapKeyDefault
     sfs << @twosixtyC # in map, get mapValue
-    puts "PRINTING SFS"
-    pp sfs
+    # puts "PRINTING SFS"
+    # pp sfs
     # puts "PRINTING MAP"
     # pp @map
     sfs.marc_values(@one).should.equal [@noMapKeyDefault, @mapValue]

@@ -23,4 +23,16 @@ describe "Maps" do
     newmvmap.should.equal @mvmap
   end
   
+  it "should read a kv solrmarc file" do
+    map = MARCSpec::KVMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/country_map.properties"
+    map.mapname.should.equal 'country_map'
+    map["nl"].should.equal "New Caledonia"
+  end
+  
+  it "should read a pattern solrmarc file" do
+    map = MARCSpec::MultiValueMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/library_map.properties"
+    map.mapname.should.equal 'library_map'
+    map['UMTRI Stuff'].should.equal ['Transportation Research Institute Library (UMTRI)']
+    map['HATCH DOCS'].should.equal ['Hatcher Graduate', 'Hatcher Graduate Documents Center']
+  end
 end

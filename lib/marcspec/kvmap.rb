@@ -25,7 +25,7 @@ module MARCSpec
     
         
     def self.from_solrmarc_file filename
-      mapname = File.basename(fn).sub(/\..+?$/, '')
+      mapname = File.basename(filename).sub(/\..+?$/, '')
       map = {}
       File.open(filename) do |smf|
         smf.each_line do |l|
