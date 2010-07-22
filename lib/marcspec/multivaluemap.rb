@@ -53,7 +53,7 @@ module MARCSpec
     end
     
     def pretty_print pp
-      puts self.asPPString
+      pp.pp eval(self.asPPString)
     end
     
     def asPPString

@@ -31,6 +31,12 @@ module MARCSpec
       
     end
     
+    def == other
+      return ((self.tag == other.tag) and
+              (self.range = other.range))
+    end
+    
+    
     def range= range
       @unalteredRange = range
       if range.nil?
@@ -63,11 +69,17 @@ module MARCSpec
     end
     
     def pretty_print pp
+      pp.pp eval(self.asPPString)
+    end
+    
+    def asPPString
+      s = StringIO.new
       if @unalteredRange
-        pp.pp [@tag, @unalteredRange]
+        PP.pp([@tag, @unalteredRange], s)
       else
-        pp.pp [@tag]
+        PP.pp([@tag], s)
       end
+      return s.string
     end
     
   end
@@ -92,6 +104,12 @@ module MARCSpec
       @tag = tag
       @joiner = joiner
       self.codes = codes
+    end
+    
+    def == other
+      return ((self.tag == other.tag) and
+              (self.codes = other.codes) and
+              (self.joiner = other.joiner))
     end
     
     def codes= c

@@ -64,13 +64,17 @@ module MARCSpec
     def self.fromHash h
       sfs = self.new(h)
       h[:specs].each do |s|
-        sfs << ## Need to create the tagspecs!
+        if s.size < 3 
+          sfs << MARCSpec::ControlFieldSpec.new(*s)
+        else
+          sfs << MARCSpec::VariableFieldSpec.new(s[0], s[3], s[4])
+        end
       end
       return sfs
     end
     
     def pretty_print pp
-      puts self.asPPString
+      pp.pp eval(self.asPPString)
     end
     
     def asPPString

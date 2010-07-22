@@ -40,6 +40,9 @@ describe "ControlFieldSpec" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 10..14 )
     cfs.marc_values(@one).should.equal ['58366']
   end
+  
+  
+    
 end
 
 describe "VariableFieldSpec" do
