@@ -33,7 +33,10 @@ module MARCSpec
           next unless l =~ /\S/
           l.strip!
           next if l =~ /^#/
-          next unless l =~ /^(.+?)\s*=\s*(.+)$/
+          unless l =~ /^(.+?)\s*=\s*(.+)$/
+            $LOG.warn "KVMap import skipping weird line in #{filename}\n  #{l}"
+            next
+          end
           map[$1] = $2
         end
       end

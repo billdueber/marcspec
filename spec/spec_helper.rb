@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bacon'
 require 'marc4j4r'
-
+require 'tempfile'
 begin
   require 'greeneggs'
 rescue LoadError

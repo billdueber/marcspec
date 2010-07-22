@@ -35,4 +35,30 @@ describe "Maps" do
     map['UMTRI Stuff'].should.equal ['Transportation Research Institute Library (UMTRI)']
     map['HATCH DOCS'].should.equal ['Hatcher Graduate', 'Hatcher Graduate Documents Center']
   end
+  
+  it "can dump/load a kv map" do
+    map = MARCSpec::KVMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/country_map.properties"
+    f = Tempfile.new('kvmap')
+    f.puts map.asPPString
+    path = f.path
+    f.close
+    map2 = MARCSpec::Map.fromFile(path)
+    f.unlink
+    map.class.should.equal MARCSpec::KVMap    
+    map.should.equal map2
+  end
+
+  it "can dump/load a multivalue map" do
+    map = MARCSpec::MultiValueMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/library_map.properties"
+    f = Tempfile.new('mvmap')
+    f.puts map.asPPString
+    path = f.path
+    f.close
+    map2 = MARCSpec::Map.fromFile(path)
+    f.unlink
+    map.class.should.equal MARCSpec::MultiValueMap
+    map.should.equal map2
+  end
+
+  
 end

@@ -37,8 +37,11 @@ module MARCSpec
       kvlist = []
       File.open(filename) do |f|
         f.each_line do |line|
-          match = /^.*?=\s*(.*?)\s*=>\s*(.*?)\s*$/.match(line)
-          next unless match ### should log an error
+          match = /^pattern.*?=\s*(.*?)\s*=>\s*(.*?)\s*$/.match(line)
+          unless match
+            $LOG.warn "MultiValueMap import skipping weird line in #{filename}\n  #{l}"
+            next
+          end
           kvlist << [Regexp.new(match[1]), match[2]]
         end
       end

@@ -6,6 +6,34 @@ module MARCSpec
       @map = map
     end
 
+    def self.fromFile filename
+      begin
+        str = File.open(filename).read
+      rescue Exception => e
+        $LOG.error "Problem opening #{filename}: #{e.message}"
+        raise e
+      end
+      
+      begin 
+        rawmap = eval(str)
+      rescue Exception => e
+        $LOG.error "Problem evaluating (with 'eval') file #{filename}: #{e.message}"
+        raise e
+      end
+      
+      case rawmap[:maptype]
+      when :kv
+        return KVMap.new(rawmap[:mapname], rawmap[:map])
+      when :multi
+        return MultiValueMap.new(rawmap[:mapname], rawmap[:map])
+      else
+        $LOG.error "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
+        raise ArgumentError, "File #{filename} doesn't evaluate to a valid map"
+      end
+      
+    end
+      
+
     def == other
       return ((other.mapname == self.mapname) and (other.map = self.map))
     end
