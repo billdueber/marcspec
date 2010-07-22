@@ -1,14 +1,13 @@
 require 'stringio'
 module MARCSpec
   class SolrFieldSpec
-    attr_accessor :field, :first, :map, :tagspecs
+    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :tagspecs
 
     def initialize(opts)
-      @field  = opts[:field]
+      @solrField  = opts[:solrField]
       @first = opts[:firstOnly] || false      
       @default = opts[:default] || nil
       @map = opts[:map] || nil
-      @mapname = opts[:mapname] || nil
       @noMapKeyDefault = opts[:noMapKeyDefault] || nil
       @tagspecs = []
     end
@@ -54,10 +53,30 @@ module MARCSpec
     end
     
     
+    def == other
+      return ((other.solrField == self.solrField) and
+             (other.first == self.first) and
+             (other.map == self.map) and
+             (other.noMapKeyDefault == self.noMapKeyDefault) and
+             (other.tagspecs == self.tagspecs))
+    end
+    
+    def self.fromHash h
+      sfs = self.new(h)
+      h[:specs].each do |s|
+        sfs << ## Need to create the tagspecs!
+      end
+      return sfs
+    end
+    
     def pretty_print pp
+      puts self.asPPString
+    end
+    
+    def asPPString
       s = StringIO.new
       s.print "{\n :solrField=> "
-      PP.singleline_pp(@field, s)
+      PP.singleline_pp(@solrField, s)
       s.print(",\n ")
       s.print ":firstOnly => true,\n " if @first
       if @default
@@ -82,8 +101,7 @@ module MARCSpec
       end
       s.print "\n ]"
       s.print "\n}"
-      puts s.string
-      return nil
+      return  s.string
     end
 
   end

@@ -120,11 +120,17 @@ module MARCSpec
     end
 
     def pretty_print pp
+      pp.pp eval(self.asPPString)
+    end
+    
+    def asPPString
+      s = StringIO.new
       if @joiner == ' '
-        pp.pp [@tag, '*', '*', @codes]
+        PP.singleline_pp([@tag, '*', '*', @codes], s)
       else
-        pp.pp [@tag, '*', '*', @codes, @joiner]
+        PP.singleline_pp([@tag, '*', '*', @codes, @joiner], s)
       end
+      return s.string
     end
 
   end

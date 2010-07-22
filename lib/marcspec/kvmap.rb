@@ -2,7 +2,7 @@ require 'pp'
 
 module MARCSpec
   class KVMap 
-    attr_accessor :mapname
+    attr_accessor :mapname, :map
     def initialize(mapname, map)
       @mapname = mapname
       @map = map
@@ -15,16 +15,30 @@ module MARCSpec
       end
     end    
     
+    def == other
+      return ((other.mapname == self.mapname) and (other.map = self.map))
+    end
+    
     def pretty_print pp
-      pp.pp @map
+      puts self.asPPString
     end
     
-    
-    def self.load filename
-      rawmap = eval(File.open(filename).read)
-      
+    def asPPString
+      s = StringIO.new
+      s.print "{\n :maptype=>:kv,\n :mapname=>"
+      PP.singleline_pp(@mapname, s)
+      s.print ",\n :map => "
+      PP.singleline_pp(@map, s)
+      s.puts "\n}"
+      return s.string
     end
     
+    # Take the output of pretty_print and eval it to get rawmap; pass it
+    # here to get the map object
+    def self.fromHash rawmap
+      return self.new(rawmap[:mapname], rawmap[:map])
+    end
+        
     def self.from_solrmarc_file filename
       mapname = File.basename(fn).sub(/\..+?$/, '')
       map = {}

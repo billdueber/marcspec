@@ -13,7 +13,7 @@ module MARCSpec
   
   class MultiValueMap   
     
-    attr_accessor :mapname
+    attr_accessor :mapname,:kvlist
 
     # Createa new MultiValueMap from an array of duples and an optional default
     # value (which itself can be an array of strings)
@@ -41,8 +41,29 @@ module MARCSpec
       end
     end
     
+    def == other
+      return ((other.mapname == self.mapname) and (other.kvlist = self.kvlist))
+    end
+    
+    
+    # Take the output of pretty_print and eval it to get rawmap; pass it
+    # here to get the map object
+    def self.fromHash rawmap
+       return self.new(rawmap[:mapname], rawmap[:map])
+    end
+    
     def pretty_print pp
-      pp.pp @kvlist
+      puts self.asPPString
+    end
+    
+    def asPPString
+      s = StringIO.new
+      s.print "{\n :maptype=>:multi,\n :mapname=>"
+      PP.singleline_pp(@mapname, s)
+      s.print ",\n :map => "
+      PP.singleline_pp(@kvlist, s)
+      s.puts "\n}"
+      return s.string
     end
   end
 end
