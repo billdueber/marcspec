@@ -147,7 +147,11 @@ module MARCSpec
     
     def asPPString
       s = StringIO.new
-      PP.pp([@tag, '*', '*', @codes, @joiner], s)
+      if @joiner and @joiner != ' '
+        PP.pp([@tag, '*', '*', @codes, @joiner], s)
+      else
+        PP.pp([@tag, '*', '*', @codes], s)
+      end
       return s.string
     end
 

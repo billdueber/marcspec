@@ -18,7 +18,7 @@ module MARCSpec
       s.print "{\n :maptype=>:kv,\n :mapname=>"
       PP.singleline_pp(@mapname, s)
       s.print ",\n :map => "
-      PP.singleline_pp(@map, s)
+      PP.pp(@map, s)
       s.puts "\n}"
       return s.string
     end

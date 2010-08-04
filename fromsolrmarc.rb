@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'logger'
 require 'marc4j4r'
 require 'pp'
@@ -21,11 +22,13 @@ unless File.readable? propfile
   exit
 end
 
-# First, try to create the new directory
+# First, try to create the new directory structure
 begin
-  FileUtils.mkdir_p newdir
+  FileUtils.mkdir_p "#{newdir}/translation_maps"
+  FileUtils.mkdir_p "#{newdir}/specs"
+  FileUtils.mkdir_p "#{newdir}/lib"
 rescue Exception => e
-  $LOG.warn e
+  $LOG.debug e
   # error means it's already there???
 end
 
@@ -62,14 +65,14 @@ WHOLE = /^(\d{3})$/
 CTRL = /^(\d{3})\[(.+?)\]/
 VAR  = /^(\d{3})(.+)/
 
-File.open('spec/data/umich/umich_index.properties') do |fh|
+File.open(propfile) do |fh|
   fh.each_line do |line|
     next unless line =~ /\S/
     line.strip!
     next if line =~ /^#/
     fieldname,spec = line.split(/\s*=\s*/)
     if spec =~ /^custom/
-      # $LOG.warn "Skipping custom line #{line}"
+      # $LOG.debug "Skipping custom line #{line}"
       next
     end
     
@@ -101,7 +104,7 @@ File.open('spec/data/umich/umich_index.properties') do |fh|
         sfcodes = $2.split(//)
         sfs << MARCSpec::VariableFieldSpec.new(tag, sfcodes)
       else
-        $LOG.warn "Didn't recognize line '#{line}'"
+        $LOG.debug "Didn't recognize line '#{line}'"
       end
     end # marcfields.split
     
@@ -114,7 +117,7 @@ File.open('spec/data/umich/umich_index.properties') do |fh|
         mapname =  special.gsub(/.properties$/, '')
         sfs.map = ss.map(mapname)
         if mapname.nil? 
-          $LOG.warn "Unrecognized map name '#{mapname}'"
+          $LOG.debug "Unrecognized map name '#{mapname}'"
         end
       end
     end
@@ -122,5 +125,23 @@ File.open('spec/data/umich/umich_index.properties') do |fh|
     
     ss << sfs if sfs.marcfieldspecs.size > 0
   end
+end
+
+# Spit it out
+
+# First, put the maps in newdir/translation_maps
+
+ss.tmaps.each do |name, map|
+  filename = name + '.rb'
+  $LOG.debug "Writing out translation map #{filename}"
+  File.open("#{newdir}/translation_maps/#{filename}", 'w') do |f|
+    f.puts map.asPPString
+  end
+end
+
+# Now the solrspecs
+File.open("#{newdir}/specs/#{newpropfile}", 'w') do |f|
+  $LOG.debug "Writing out spec file #{newpropfile}"
+  PP.pp(ss.solrfieldspecs, f)
 end
 
