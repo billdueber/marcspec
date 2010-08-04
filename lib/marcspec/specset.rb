@@ -7,6 +7,10 @@ module MARCSpec
       @solrfieldspecs = []
     end
     
+    def map name
+      return self.tmaps[name]
+    end
+    
     def add_map map
       self.tmaps[map.mapname] = map
     end
@@ -22,20 +26,22 @@ module MARCSpec
         yield fs
       end
     end
+    
+    def fill_hashlike_from_marc r, hashlike
+      @solrfieldspecs.each do |fs|
+        hashlike[fs.field] = fs.marc_values(r)
+      end  
+    end
 
     def doc_from_marc r
       doc = SolrInputDocument.new
-      @solrfieldspecs.each do |fs|
-        doc[fs.field] = fs.marc_values(r)
-      end
+      fill_hashlike_from_marc r, doc
       return doc
     end      
     
     def hash_from_marc r
       h = {}
-      @fieldspecs.each do |fs|
-       h[fs.field] = fs.marc_values(r)
-      end
+      fill_hashlike_from_marc r, h
       return h
     end
   end

@@ -1,7 +1,7 @@
 require 'stringio'
 module MARCSpec
   class SolrFieldSpec
-    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :tagspecs
+    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs
 
     def initialize(opts)
       @solrField  = opts[:solrField]
@@ -9,17 +9,17 @@ module MARCSpec
       @default = opts[:default] || nil
       @map = opts[:map] || nil
       @noMapKeyDefault = opts[:noMapKeyDefault] || nil
-      @tagspecs = []
+      @marcfieldspecs = []
     end
 
     def << tagspec
-      @tagspecs << tagspec
+      @marcfieldspecs << tagspec
     end
 
     def marc_values r
       vals = []
-      # puts "Tagspecs has #{@tagspecs.size} items"
-      @tagspecs.each do |ts|
+      # puts "marcfieldspecs has #{@marcfieldspecs.size} items"
+      @marcfieldspecs.each do |ts|
         vals.concat ts.marc_values(r)
         # puts vals.join(', ')
         break if @first and vals.size > 0
@@ -58,7 +58,7 @@ module MARCSpec
              (other.first == self.first) and
              (other.map == self.map) and
              (other.noMapKeyDefault == self.noMapKeyDefault) and
-             (other.tagspecs == self.tagspecs))
+             (other.marcfieldspecs == self.marcfieldspecs))
     end
     
     def self.fromPPString str
@@ -103,7 +103,7 @@ module MARCSpec
         s.print(",\n ")
       end
       s.print(":specs => [\n   ")
-      @tagspecs.each do |ts|
+      @marcfieldspecs.each do |ts|
         PP.singleline_pp(ts, s)
         s.print(",\n   ")
       end

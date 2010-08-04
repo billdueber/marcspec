@@ -147,7 +147,7 @@ module MARCSpec
     
     def asPPString
       s = StringIO.new
-      PP.singleline_pp([@tag, '*', '*', @codes, @joiner], s)
+      PP.pp([@tag, '*', '*', @codes, @joiner], s)
       return s.string
     end
 
