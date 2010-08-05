@@ -25,7 +25,8 @@ describe "ControlFieldSpec" do
     # @batch = MARC4J4R::Reader.new("#{DIR}/batch.dat").collect
   end
 
-  
+  # afc99990058366 # data
+  # 01234567890123 # index
   it "gets a single full value" do
     cfs = MARCSpec::ControlFieldSpec.new('001')
     cfs.marc_values(@one).should.equal ["afc99990058366"]    
@@ -33,20 +34,19 @@ describe "ControlFieldSpec" do
   
   it "gets a single character" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 10 )
-    cfs.marc_values(@one).should.equal ['5']
+    cfs.marc_values(@one).should.equal ['8']
   end
   
   it "gets a range of characters" do
-    cfs = MARCSpec::ControlFieldSpec.new('001', 10..14 )
-    cfs.marc_values(@one).should.equal ['58366']
+    cfs = MARCSpec::ControlFieldSpec.new('001', 6..10 )
+    cfs.marc_values(@one).should.equal ['90058']
   end
   
   it "should round trip" do
-    cfs = MARCSpec::ControlFieldSpec.new('001', 10..14 )
+    cfs = MARCSpec::ControlFieldSpec.new('001', 6..10 )
     cfs2 = MARCSpec::ControlFieldSpec.fromPPString(cfs.asPPString)
     cfs.should.equal cfs2
-  end
-    
+  end    
 end
 
 describe "VariableFieldSpec" do

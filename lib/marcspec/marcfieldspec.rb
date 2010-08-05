@@ -77,8 +77,8 @@ module MARCSpec
     
     def asPPString
       s = StringIO.new
-      if @unalteredRange
-        PP.pp([@tag, @unalteredRange], s)
+      if @range
+        PP.pp([@tag, @range], s)
       else
         PP.pp([@tag], s)
       end
@@ -110,7 +110,7 @@ module MARCSpec
     
     def initialize tag, codes=nil, joiner=' '
       @tag = tag
-      @joiner = joiner
+      @joiner = joiner || ' '
       self.codes = codes
     end
     
