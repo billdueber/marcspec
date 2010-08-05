@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "marcspec"
     gem.summary = %Q{Extract data from MARC records and send to Solr}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{Relies on marc4j4r, based on work in solrmarc}
     gem.email = "bill@dueber.com"
     gem.homepage = "http://github.com/billdueber/marcspec"
     gem.authors = ["BillDueber"]

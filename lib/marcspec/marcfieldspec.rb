@@ -3,20 +3,19 @@ require 'set'
 require 'pp'
 module MARCSpec
 
-  # A ControlFieldSpec takes a control tag (generally 001..009) and an optional 1-based range
+  # A ControlFieldSpec takes a control tag (generally 001..009) and an optional zero-based range
   # When called with marc_values(record), it returns either the complete value of all
   # occurances of the field in question (in the order they appear in the record), or 
-  # the one-based substrings based on the passed range. 
+  # the zero-based substrings based on the passed range. 
   #
   # @example Get the whole 001
   # cfs = MARCSpec::ControlTagSpec.new('001')
   # 
   # @example Get the first three characters of the 008
-  # cfs = MARCSpec::ControlTagSpec.new('001', 1..3)
+  # cfs = MARCSpec::ControlTagSpec.new('001', 0..2)
   #
-  # Note that the use of the one-based range in this manner flies in the face of programming
-  # convention, but conforms to the way MARC substrings are specified. The weirdness is allowed
-  # to make translation from MARC documentation as easy as possible.
+  # Note that the use of the zero-based range in this manner conforms to the way MARC 
+  # substrings are specified.
   
   class ControlFieldSpec
     attr_accessor :tag, :range
@@ -27,7 +26,6 @@ module MARCSpec
       end
       @tag = tag
       self.range = range
-      
     end
     
     def == other
@@ -36,25 +34,31 @@ module MARCSpec
     end
     
     
+    # Always force a real range, since in Ruby 1.9 a string subscript with a single fixnum
+    # will return the character code of that character (e.g., "Bill"[0] => 66, wherease 
+    # "Bill"[0..0] gives the expected 'B'
+    #
+    # @param [nil, Fixnum, Range] range A zero-based substring range or character position
+    # @return [MARCSpec::ControlFieldSpec] self
+    
     def range= range
-      @unalteredRange = range
       if range.nil?
         @range = nil
-        return nil
+        return self
       end
       if range.is_a? Fixnum
-        if range < 1
+        if range < 0
           raise ArgumentError, "Range must be nil, an integer offset (1-based), or a Range, not #{range}"
         end
       
-        range = range - 1
         @range = range..range
       
       elsif range.is_a? Range
-        @range = Range.new(range.first - 1, range.last - 1)
+        @range = range
       else
         raise ArgumentError, "Range must be nil, an integer offset (1-based), or a Range, not #{range.inspect}"
       end
+      return self
     end
     
     

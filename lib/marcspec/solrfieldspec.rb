@@ -18,7 +18,6 @@ module MARCSpec
 
     def marc_values r
       vals = []
-      # puts "marcfieldspecs has #{@marcfieldspecs.size} items"
       @marcfieldspecs.each do |ts|
         vals.concat ts.marc_values(r)
         # puts vals.join(', ')
@@ -41,6 +40,7 @@ module MARCSpec
       # If we've got a map, map it.
 
       if (@map)
+        puts "Mapping!"
         vals.map! {|v| @map[v, @noMapKeyDefault]}
       end
       

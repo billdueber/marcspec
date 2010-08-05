@@ -97,7 +97,7 @@ File.open(propfile) do |fh|
         last ||= first
         first = first.to_i
         last = last.to_i
-        sfs << MARCSpec::ControlFieldSpec.new(tag, (first..last))
+        sfs << MARCSpec::ControlFieldSpec.new(tag, first..last)
         next
       elsif VAR.match ms
         tag = $1

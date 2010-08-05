@@ -1,3 +1,4 @@
+require 'jruby_streaming_update_solr_server'
 module MARCSpec
   class SpecSet
     attr_accessor :tmaps, :solrfieldspecs
@@ -28,9 +29,10 @@ module MARCSpec
     end
     
     def fill_hashlike_from_marc r, hashlike
-      @solrfieldspecs.each do |fs|
-        hashlike[fs.field] = fs.marc_values(r)
-      end  
+      @solrfieldspecs.each do |sfs|
+        vals = sfs.marc_values(r)
+        hashlike[sfs.solrField] = vals
+       end  
     end
 
     def doc_from_marc r
