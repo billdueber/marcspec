@@ -92,6 +92,29 @@ module MARCSpec
     
   end
   
+  
+  # A LeaderSpec deals only with the leader. It's basically the same as a controlfield spec, but
+  # using the string 'LDR' to identify itself
+  
+  class LeaderSpec < ControlFieldSpec
+    def initialize (tag, range=nil)
+      unless tag == 'LDR'
+        raise ArgumentError "Tag must be 'LDR'"
+      end
+      @tag = 'LDR'
+      self.range = range
+    end
+    
+    def marc_values r
+      if @range
+        return r.leader[@range]
+      else
+        return r.leader
+      end
+    end
+  end    
+    
+  
   # A VariableFieldSpec has a tag (three chars) and a set of codes. Its #marc_values(r) method will return
   # all the values for the subfields for the given codes joined by the optional joiner (space by default)
   #
@@ -152,9 +175,9 @@ module MARCSpec
     def asPPString
       s = StringIO.new
       if @joiner and @joiner != ' '
-        PP.pp([@tag, '*', '*', @codes, @joiner], s)
+        PP.pp([@tag, '*', '*', @codes.join(''), @joiner], s)
       else
-        PP.pp([@tag, '*', '*', @codes], s)
+        PP.pp([@tag, '*', '*', @codes.join('')], s)
       end
       return s.string
     end

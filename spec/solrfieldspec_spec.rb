@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "MARCFieldSpec" do
+describe "SolrFieldSpec" do
   before do 
     @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
     # @batch = MARC4J4R::Reader.new("#{DIR}/batch.dat").collect
@@ -107,6 +107,58 @@ describe "MARCFieldSpec" do
     newsfs.map = @map
     sfs.should.equal newsfs
   end
-
 end    
 
+module A
+  module B
+    def self.titleUp r, args
+      codes = args[0] 
+      title = r['245']
+      if codes
+        return [title.sub_values(codes).join(' ').upcase]
+      else  
+        return [title.value.upcase]
+      end
+    end
+  end
+end
+
+
+
+describe "CustomSolrSpec" do
+  before do 
+    @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
+    @opts = {:solrField=>'solrfield'}
+    @titleACValue = "The Texas ranger Sung by Beale D. Taylor."
+    @twosixtyCValue = "1939."
+    @mapValue = "titleACUppercaseValue"
+    @mapValueForDefault = 'mapValueForDefaultValue'
+    @noMapKeyDefault = 'noMapKeyDefault'
+    
+    @map = MARCSpec::KVMap.new('nameOfTheMap', {@titleACValue.upcase => @mapValue, @default=>@mapValueForDefault})
+  end
+  
+  it "works with no args or map" do
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :methodSymbol=>:titleUp)
+    css.marc_values(@one).should.equal [@one['245'].value.upcase]
+  end
+
+  it "accepts nil for no args" do
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>nil)
+    css.marc_values(@one).should.equal [@one['245'].value.upcase]
+  end
+
+  
+  it "uses a custom method with args but no map" do
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
+    css.marc_values(@one).should.equal [@titleACValue.upcase]
+  end
+  
+  it "works with a map" do
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
+    css.marc_values(@one).should.equal [@mapValue]
+    puts css.asPPString
+  end
+  
+end
+  

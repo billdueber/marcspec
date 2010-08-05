@@ -12,6 +12,15 @@ module MARCSpec
       return self.tmaps[name]
     end
     
+    def loadMapsFromDir dir
+      unless File.exist? dir
+        raise ArgumentError, "Cannot load maps from #{dir}: does not exist"
+      end
+      Dir.glob("#{dir}/*.rb").each do |tmapfile|
+        self.add_map(MARCSpec::Map.fromFile(tmapfile))
+      end
+    end
+    
     def add_map map
       self.tmaps[map.mapname] = map
     end
@@ -30,9 +39,8 @@ module MARCSpec
     
     def fill_hashlike_from_marc r, hashlike
       @solrfieldspecs.each do |sfs|
-        vals = sfs.marc_values(r)
-        hashlike[sfs.solrField] = vals
-       end  
+        hashlike[sfs.solrField] = sfs.marc_values(r)
+      end
     end
 
     def doc_from_marc r

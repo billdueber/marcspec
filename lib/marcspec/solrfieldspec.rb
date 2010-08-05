@@ -16,13 +16,17 @@ module MARCSpec
       @marcfieldspecs << tagspec
     end
 
-    def marc_values r
+
+    def raw_marc_values r
       vals = []
       @marcfieldspecs.each do |ts|
         vals.concat ts.marc_values(r)
-        # puts vals.join(', ')
-        break if @first and vals.size > 0
       end
+      return vals
+    end
+      
+    def marc_values r
+      vals = raw_marc_values r
       
       if @first
         vals = [vals.compact.first].compact
@@ -40,7 +44,6 @@ module MARCSpec
       # If we've got a map, map it.
 
       if (@map)
-        puts "Mapping!"
         vals.map! {|v| @map[v, @noMapKeyDefault]}
       end
       
@@ -102,13 +105,13 @@ module MARCSpec
         PP.singleline_pp(@noMapKeyDefault, s)
         s.print(",\n ")
       end
-      s.print(":specs => [\n   ")
+      s.print(":specs => [\n")
       @marcfieldspecs.each do |ts|
+        s.print '  '
         PP.singleline_pp(ts, s)
-        s.print(",\n   ")
+        s.print(",\n")
       end
-      s.print "\n ]"
-      s.print "\n}"
+      s.print " ]\n}"
       return  s.string
     end
 

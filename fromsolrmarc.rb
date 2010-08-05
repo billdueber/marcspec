@@ -121,8 +121,6 @@ File.open(propfile) do |fh|
         end
       end
     end
-      
-    
     ss << sfs if sfs.marcfieldspecs.size > 0
   end
 end
@@ -142,6 +140,10 @@ end
 # Now the solrspecs
 File.open("#{newdir}/specs/#{newpropfile}", 'w') do |f|
   $LOG.debug "Writing out spec file #{newpropfile}"
-  PP.pp(ss.solrfieldspecs, f)
+  f.puts '['
+  ss.solrfieldspecs.each do |sfs|
+    f.puts sfs.asPPString
+  end
+  f.puts ']'
 end
 

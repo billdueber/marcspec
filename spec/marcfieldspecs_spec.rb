@@ -49,6 +49,25 @@ describe "ControlFieldSpec" do
   end    
 end
 
+
+describe "LeaderSpec" do
+  before do
+    @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
+  end
+  
+  it "Works with full leader" do
+    cfs = MARCSpec::LeaderSpec.new('LDR')
+    cfs.marc_values(@one).should.equal @one.leader
+  end
+  
+  it "Works with substring of leader" do
+    cfs = MARCSpec::LeaderSpec.new('LDR', 3..5)
+    cfs.marc_values(@one).should.equal @one.leader[3..5]
+  end
+end
+    
+  
+
 describe "VariableFieldSpec" do
   before do
     @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
@@ -69,6 +88,7 @@ describe "VariableFieldSpec" do
     a = MARCSpec::VariableFieldSpec.new('260').marc_values(@one)
     ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c']).marc_values(@one)
     ca =  MARCSpec::VariableFieldSpec.new('260', ['c', 'a']).marc_values(@one)
+    ca2 = MARCSpec::VariableFieldSpec.new('260', 'ca').marc_values(@one)
     allrange = MARCSpec::VariableFieldSpec.new('260', 'a'..'z').marc_values(@one)
     a.should.equal ac
     ac.should.equal ca
