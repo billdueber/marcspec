@@ -1,6 +1,16 @@
 module MARCSpec
+  
+  # A Map is just a named lookup table. The access
+  # (via []) takes, in adition to a key, an optional
+  # default value to return 
+  
   class Map
     attr_accessor :mapname, :map
+    
+    # Create a new map. The passed map is either
+    # a standard hash or a list of duples
+    #
+    # @param
     def initialize(mapname, map)
       @mapname = mapname
       @map = map
