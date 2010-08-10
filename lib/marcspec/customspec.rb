@@ -50,7 +50,7 @@ module MARCSpec
     end
     
     def raw_marc_values r
-      return @module.send(@methodSymbol, r, @methodArgs)
+      return @module.send(@methodSymbol, r, *@methodArgs)
     end
     
     def self.fromHash h
