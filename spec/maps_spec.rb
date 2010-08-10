@@ -2,13 +2,39 @@ require 'spec_helper'
 
 describe "Maps" do
   before do
-    @kvmap = MARCSpec::KVMap.new('kvmap', {'one' => 1, 'two' => 2})
+    @kvmap = MARCSpec::KVMap.new('kvmap', {'one' => '1', 'two' => ['2', 'zwei']})
     @mvmap = MARCSpec::MultiValueMap.new('mvmap', [[/bi/, 'Bill'], [/mo/, 'Molly'], [/ll/, 'Bill']])
   end
   
   it "knows its name" do
     @kvmap.mapname.should.equal 'kvmap'
     @mvmap.mapname.should.equal 'mvmap'
+  end
+  
+  it "gets simple value from a kv map" do
+    @kvmap['one'].should.equal '1'
+  end
+  
+  it "gets a list value from a kv map" do
+    @kvmap['two'].should.equal ['2', 'zwei']
+  end
+  
+  it "gets nothing on nonmatches" do
+    @kvmap['ddd'].should.equal nil
+    @mvmap['ddd'].should.equal [nil]
+  end
+  
+  it "gets correct values from multivaluemap" do
+    @mvmap['bi'].should.equal ['Bill']
+    @mvmap['bill'].should.equal ['Bill']
+    @mvmap['mobi'].sort.should.equal ['Bill', 'Molly'].sort
+  end
+  
+  it "correctly uses default value" do
+    @mvmap['bi', 'default'].should.equal ['Bill']
+    @mvmap['ddd', 'default'].should.equal ['default']
+    @kvmap['ddd', 'default'].should.equal 'default'
+    @kvmap['one', 'default'].should.equal '1'
   end
   
   it "should round-trip a kvmap" do

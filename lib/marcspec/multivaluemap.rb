@@ -13,7 +13,7 @@ module MARCSpec
   #
   # Keys can be either strings or regular expressions (e.g., /^Bil/). 
   #
-  # Again, note that if several keys are == to the passed argument, all the values will be returned. 
+  # Again, note that if several keys are === to the passed argument, all the values will be returned. 
   
   class MultiValueMap   < Map
     
@@ -28,7 +28,7 @@ module MARCSpec
       if rv.size > 0
         return rv
       else
-        return default
+        return [default]
       end
     end
     
