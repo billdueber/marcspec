@@ -1,7 +1,7 @@
 = marcspec
 
 The MARCSpec contains classes designed to make it (relatively) easy to specify
-a data field (my use case specifically is solr) in terms of sets of MARC fields.
+a data field (my use case specifically is solr) in terms of sets of MARC fields and subfields.
 
 == A simple breakdown of the hierarchy
 
@@ -41,6 +41,8 @@ individual class.
 
 Better documented samples are available as part of the marc2solr project
 at http://github.com/billdueber/marc2solr -- look in the simple_sample area.
+
+
 
 == Note on Patches/Pull Requests
  
