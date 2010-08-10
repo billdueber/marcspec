@@ -1,7 +1,7 @@
 require 'stringio'
 module MARCSpec
   class SolrFieldSpec
-    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs
+    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default
 
     def initialize(opts)
       @solrField  = opts[:solrField]
@@ -27,17 +27,21 @@ module MARCSpec
       
     def marc_values r
       vals = raw_marc_values r
+      unless vals.is_a? Array
+        vals = [vals]
+      end
       
       if @first
         vals = [vals.compact.first].compact
       end
 
-      # If we got nothing 
+      # If we got nothing, just return either nothing or the defualt,
+      # if there is one. Don't screw around with mapping.
       if vals.size == 0
         if @default.nil? # unless there's a default value, just return nothing
           return []
         else
-          vals =  [@default]
+          return [@default]
         end
       end
       
