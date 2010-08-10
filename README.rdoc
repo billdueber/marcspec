@@ -35,8 +35,12 @@ options.
     return values; the whole thing is flattened out before returning
 
 Obviously, better descriptions and full documentation is available in each 
-individual class, and documented samples are available as part of the marc2solr project
-at http://github.com/billdueber/marc2solr
+individual class.
+
+== Better examples in marc2solr
+
+Better documented samples are available as part of the marc2solr project
+at http://github.com/billdueber/marc2solr -- look in the simple_sample area.
 
 == Note on Patches/Pull Requests
  
