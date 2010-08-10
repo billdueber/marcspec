@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Maps" do
   before do
     @kvmap = MARCSpec::KVMap.new('kvmap', {'one' => '1', 'two' => ['2', 'zwei']})
-    @mvmap = MARCSpec::MultiValueMap.new('mvmap', [[/bi/, 'Bill'], [/mo/, 'Molly'], [/ll/, 'Bill']])
+    @mvmap = MARCSpec::MultiValueMap.new('mvmap', [[/bi/, 'Bill'], [/mo/i, 'Molly'], [/ll/, 'Bill'], [/lly/i, ['One', 'Two']]])
   end
   
   it "knows its name" do
@@ -28,6 +28,7 @@ describe "Maps" do
     @mvmap['bi'].should.equal ['Bill']
     @mvmap['bill'].should.equal ['Bill']
     @mvmap['mobi'].sort.should.equal ['Bill', 'Molly'].sort
+    @mvmap['Molly'].sort.should.equal ['Molly', 'Bill', 'One', 'Two'].sort
   end
   
   it "correctly uses default value" do
