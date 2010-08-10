@@ -25,7 +25,6 @@ end
 # First, try to create the new directory structure
 begin
   FileUtils.mkdir_p "#{newdir}/translation_maps"
-  FileUtils.mkdir_p "#{newdir}/specs"
   FileUtils.mkdir_p "#{newdir}/lib"
 rescue Exception => e
   $LOG.debug e
@@ -71,8 +70,10 @@ File.open(propfile) do |fh|
     line.strip!
     next if line =~ /^#/
     fieldname,spec = line.split(/\s*=\s*/)
+    
+    # Deal with custom fields
     if spec =~ /^custom/
-      # $LOG.debug "Skipping custom line #{line}"
+      $LOG.debug "Skipping custom line #{line}"
       next
     end
     
@@ -138,11 +139,11 @@ ss.tmaps.each do |name, map|
 end
 
 # Now the solrspecs
-File.open("#{newdir}/specs/#{newpropfile}", 'w') do |f|
+File.open("#{newdir}/#{newpropfile}", 'w') do |f|
   $LOG.debug "Writing out spec file #{newpropfile}"
   f.puts '['
   ss.solrfieldspecs.each do |sfs|
-    f.puts sfs.asPPString
+    f.puts sfs.asPPString + ','
   end
   f.puts ']'
 end
