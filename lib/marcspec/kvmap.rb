@@ -30,10 +30,19 @@ module MARCSpec
       if @map.has_key? key
         @map[key]
       else
-        default
+        if default == :passthrough
+          return key
+        else
+          return default
+        end
       end
     end    
     
+    def []= key, value
+      @map[key] = value
+    end
+    
+    alias_method :add, :[]=
     
     def asPPString
       s = StringIO.new

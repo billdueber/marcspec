@@ -80,21 +80,36 @@ describe "SolrFieldSpec" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC # not in map, get noMapKeyDefault
     sfs << @twosixtyC # in map, get mapValue
-    # puts "PRINTING SFS"
-    # pp sfs
-    # puts "PRINTING MAP"
-    # pp @map
     sfs.marc_values(@one).should.equal [@noMapKeyDefault, @mapValue]
   end
 
-  it "works with a KV Map and maps default value correctly" do
+  it "works with a KV Map and returns default value correctly" do
     @opts[:map] = @map
     @opts[:default] = @default
     @opts[:noMapKeyDefault] = @noMapKeyDefault
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @nonmatchingSpec
-    sfs.marc_values(@one).should.equal [@mapValueForDefault]
+    sfs.marc_values(@one).should.equal [@default]
   end
+  
+  it "returns multiple values from a kv map when appropriate" do
+    @map[@twosixtyCValue] = ['one', 'two']
+    @opts[:map] = @map
+    sfs = MARCSpec::SolrFieldSpec.new(@opts)
+    sfs << @twosixtyC
+    sfs.marc_values(@one).sort.should.equal ['one', 'two']
+  end
+  
+  it "flattens things out when getting multiple values from a kv map" do
+    @map[@titleACValue] = ['one', 'two']
+    @map[@twosixtyCValue] = ['three', 'four']
+    @opts[:map] = @map
+    sfs = MARCSpec::SolrFieldSpec.new(@opts)
+    sfs << @twosixtyC
+    sfs << @titleAC
+    sfs.marc_values(@one).sort.should.equal ['one', 'two', 'three', 'four'].sort
+  end
+    
   
   it "round trips if you add the map by hand" do
     @opts[:map] = @map
@@ -111,8 +126,7 @@ end
 
 module A
   module B
-    def self.titleUp r, args
-      codes = args[0] 
+    def self.titleUp r, codes=nil
       title = r['245']
       if codes
         return [title.sub_values(codes).join(' ').upcase]
@@ -157,7 +171,6 @@ describe "CustomSolrSpec" do
   it "works with a map" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
     css.marc_values(@one).should.equal [@mapValue]
-    puts css.asPPString
   end
   
 end
