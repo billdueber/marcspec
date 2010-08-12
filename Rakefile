@@ -13,7 +13,7 @@ begin
     gem.add_development_dependency "bacon", ">= 0"
     gem.add_development_dependency "yard", ">= 0"
 
-    gem.add_dependency 'marc4j4r', '>=0.2.4'
+    gem.add_dependency 'marc4j4r', '>=0.9.0'
     gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.2.0'
     
     
