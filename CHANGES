@@ -1,0 +1,8 @@
+0.3.0
+  * Changed behavior with respect to repeated subfields. A spec such as '260 ac' returns the values of the 'a' and
+  'c' subfields concatenated together. A request for '631 z' would, similarly, return the values *of all the subfield
+  z's* concatenated together. I'm now treating this as a special case. If the request is for a single subfield code,
+  multiple values are returned separate from each other.
+  
+0.2.0
+  * First public release
