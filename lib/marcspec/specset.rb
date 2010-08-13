@@ -39,7 +39,7 @@ module MARCSpec
     
     def fill_hashlike_from_marc r, hashlike
       @solrfieldspecs.each do |sfs|
-        hashlike[sfs.solrField] = sfs.marc_values(r)
+        hashlike[sfs.solrField] = sfs.marc_values(r, hashlike)
       end
     end
 

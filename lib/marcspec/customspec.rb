@@ -49,7 +49,7 @@ module MARCSpec
       
     end
     
-    def raw_marc_values r
+    def raw_marc_values r, doc
       return @module.send(@methodSymbol, r, *@methodArgs)
     end
     
