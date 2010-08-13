@@ -173,5 +173,11 @@ describe "CustomSolrSpec" do
     css.marc_values(@one).should.equal [@mapValue]
   end
   
+  it "works with a map that has multiple return values" do 
+    @map[@titleACValue.upcase] = ['two', 'one']
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
+    css.marc_values(@one).should.equal ['two', 'one']
+  end
+  
 end
   
