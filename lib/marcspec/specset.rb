@@ -21,9 +21,34 @@ module MARCSpec
       end
     end
     
+  
+    
     def add_map map
       self.tmaps[map.mapname] = map
     end
+    
+    
+    def buildSpecsFromList speclist
+      speclist.each do |spechash|
+        if spechash[:module]
+          solrspec = MARCSpec::CustomSolrSpec.fromHash(spechash)
+        else
+          solrspec = MARCSpec::SolrFieldSpec.fromHash(spechash)
+        end
+        if spechash[:mapname]
+          map = self.map(spechash[:mapname])
+          unless map
+            $LOG.error "  Cannot find map #{spechash[:mapname]} for field #{spechash[:solrField]}"
+          else
+            $LOG.debug "  Found map #{spechash[:mapname]} for field #{spechash[:solrField]}"
+            solrspec.map = map
+          end
+        end
+        self.add_spec solrspec
+        $LOG.debug "Added spec #{solrspec.solrField}"
+      end
+    end
+      
     
     def add_spec solrfieldspec
       self.solrfieldspecs << solrfieldspec

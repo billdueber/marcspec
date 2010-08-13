@@ -84,6 +84,11 @@ describe "VariableFieldSpec" do
     dfs.marc_values(@one).should.equal ["Medina, Texas,"]
   end
   
+  it "should return separate values for repeated subfields if only one code is specified" do
+    dfs = MARCSpec::VariableFieldSpec.new('651', 'z')
+    dfs.marc_values(@one).sort.should.equal ['Texas', 'United States of America.']
+  end
+  
   it "Should get all fields via several equal routes" do
     a = MARCSpec::VariableFieldSpec.new('260').marc_values(@one)
     ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c']).marc_values(@one)

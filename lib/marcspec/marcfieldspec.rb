@@ -176,8 +176,10 @@ module MARCSpec
       vals = []
       fields.each do |f|
         subvals = f.sub_values(@codes)
-        vals << subvals.join(@joiner) if subvals.size > 0
+        subvals =  subvals.join(@joiner) if subvals.size > 0 and (@codes.nil? or @codes.size > 1)
+        vals << subvals
       end
+      vals.flatten!
       return vals
     end
 
