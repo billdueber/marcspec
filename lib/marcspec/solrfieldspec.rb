@@ -25,7 +25,7 @@ module MARCSpec
       return vals
     end
       
-    def marc_values r, doc = nil
+    def marc_values r, doc = {}
       vals = raw_marc_values r, doc
       unless vals.is_a? Array
         vals = [vals]

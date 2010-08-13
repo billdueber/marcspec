@@ -49,8 +49,9 @@ module MARCSpec
       
     end
     
+    
     def raw_marc_values r, doc
-      return @module.send(@methodSymbol, r, *@methodArgs)
+      return @module.send(@methodSymbol, doc, r, *@methodArgs)
     end
     
     def self.fromHash h

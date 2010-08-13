@@ -1,3 +1,7 @@
+0.4.0
+  * MAJOR BACKWARD-INCOMPATIBLE CHANGE!! The signature for custom routines is now def function(doc, record, my, args), where
+  "doc" is a hashlike (usually a SolrDocument) that contains all the work that has happened up to this point. The idea is that you 
+  can use previously-computed values to determine values for different fields. Use sparingly.
 0.3.0
   * Changed behavior with respect to repeated subfields. A spec such as '260 ac' returns the values of the 'a' and
   'c' subfields concatenated together. A request for '631 z' would, similarly, return the values *of all the subfield

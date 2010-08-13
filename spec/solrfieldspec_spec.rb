@@ -126,13 +126,25 @@ end
 
 module A
   module B
-    def self.titleUp r, codes=nil
+    def self.titleUp doc, r, codes=nil
       title = r['245']
       if codes
         return [title.sub_values(codes).join(' ').upcase]
       else  
         return [title.value.upcase]
       end
+    end
+    
+    # downcase and strip punctuation to create a sortable entitiy. Here, we're actually
+    # ignoring the passed-in record entirely
+    def self.sortable doc, r, whereTheTitleIs
+      vals = []
+      if doc[]
+        doc[whereTheTitleIs].each do |title|
+          vals << title.gsub(/\p{Punct}/, ' ').gsub(/\s+/, ' ').strip.downcase
+        end
+      end
+      return vals
     end
   end
 end
@@ -178,6 +190,7 @@ describe "CustomSolrSpec" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
     css.marc_values(@one).should.equal ['two', 'one']
   end
+  
   
 end
   
