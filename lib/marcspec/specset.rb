@@ -1,5 +1,23 @@
 require 'jruby_streaming_update_solr_server'
+
+
+    
+
 module MARCSpec
+
+  # Create a mock solr document based on a normal hash for mocking.
+  # All we really need is a compatible add method
+  class MockSolrDoc < Hash
+    def add key, value
+      if self.has_key? key
+        self[key] << value
+      else
+        self[key] = [value]
+      end
+      self[key].flatten!      
+    end
+  end
+
   class SpecSet
     attr_accessor :tmaps, :solrfieldspecs
     
@@ -64,7 +82,8 @@ module MARCSpec
     
     def fill_hashlike_from_marc r, hashlike
       @solrfieldspecs.each do |sfs|
-        hashlike[sfs.solrField] = sfs.marc_values(r, hashlike)
+        hashlike.add(sfs.solrField,sfs.marc_values(r, hashlike))
+        # hashlike[sfs.solrField] = sfs.marc_values(r, hashlike)
       end
     end
 
@@ -75,7 +94,7 @@ module MARCSpec
     end      
     
     def hash_from_marc r
-      h = {}
+      h = MARCSpec::MockSolrDoc.new
       fill_hashlike_from_marc r, h
       return h
     end

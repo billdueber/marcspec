@@ -26,7 +26,7 @@ module A
 end
 
 
-describe "Basics" do
+describe "SpecSet Basics" do
   before do
     @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
     @places = ['Medina', 'Texas', 'United States of America.', 'Medina, Texas,']
@@ -66,6 +66,16 @@ describe "Basics" do
     h = ss.hash_from_marc @one
     h['title'].should.equal @title
     h['titleSort'].should.equal @title.map{|a| a.gsub(/\p{Punct}/, ' ').gsub(/\s+/, ' ').strip.downcase}
+  end
+  
+  it "should allow repeated solrFields" do
+    @speclist << {:solrField=>'titleA', :specs=>[['260', '*', '*', 'c']]} # '1939.'
+    expected = @titleA
+    expected << '1939.'
+    ss = MARCSpec::SpecSet.new
+    ss.buildSpecsFromList(@speclist)
+    h = ss.hash_from_marc @one
+    h['titleA'].sort.should.equal expected.sort
   end
 end
    
