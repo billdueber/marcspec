@@ -1,3 +1,6 @@
+0.5.0
+  * Allow solr field names to repeat in a spec set. This allows you to cumulatively add to a solr field based on "regular" 
+    and custom (or, say, two custom) specs.
 0.4.0
   * MAJOR BACKWARD-INCOMPATIBLE CHANGE!! The signature for custom routines is now def function(doc, record, my, args), where
   "doc" is a hashlike (usually a SolrDocument) that contains all the work that has happened up to this point. The idea is that you 
