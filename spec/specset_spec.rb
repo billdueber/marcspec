@@ -22,6 +22,11 @@ module A
       end
       return vals
     end
+    
+    
+    def self.three_value_custom doc, r
+      return [1, 2, ['a', 'b']]
+    end
   end
 end
 
@@ -77,6 +82,21 @@ describe "SpecSet Basics" do
     h = ss.hash_from_marc @one
     h['titleA'].sort.should.equal expected.sort
   end
+  
+  it "should allow multi-headed custom fields" do
+    @speclist << {:solrField => ['one', 'two', 'letters'],
+                  :module => A::B,
+                  :methodSymbol => :three_value_custom,
+      }
+    ss = MARCSpec::SpecSet.new
+    ss.buildSpecsFromList(@speclist)
+    h = ss.hash_from_marc @one
+    h['one'].should.equal [1]
+    h['two'].should.equal [2]
+    h['letters'].should.equal ['a', 'b']
+  end
+    
+    
 end
    
 

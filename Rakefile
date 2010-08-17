@@ -14,7 +14,7 @@ begin
     gem.add_development_dependency "yard", ">= 0"
 
     gem.add_dependency 'marc4j4r', '>=0.9.0'
-    gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.2.0'
+    gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.3.1'
     
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

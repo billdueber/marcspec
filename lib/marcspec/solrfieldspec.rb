@@ -1,7 +1,7 @@
 require 'stringio'
 module MARCSpec
   class SolrFieldSpec
-    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default
+    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default, :arity
 
     def initialize(opts)
       @solrField  = opts[:solrField]
@@ -9,6 +9,7 @@ module MARCSpec
       @default = opts[:default] || nil
       @map = opts[:map] || nil
       @noMapKeyDefault = opts[:noMapKeyDefault] || nil
+      @arity = 1
       @marcfieldspecs = []
     end
 
@@ -27,6 +28,7 @@ module MARCSpec
       
     def marc_values r, doc = {}
       vals = raw_marc_values r, doc
+      return vals if @arity > 1
       unless vals.is_a? Array
         vals = [vals]
       end

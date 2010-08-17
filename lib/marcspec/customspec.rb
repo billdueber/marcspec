@@ -40,12 +40,23 @@ module MARCSpec
         raise ArgumentError, "Custom solr spec must have a field name in :solrField, module in :module, and the method name as a symbol in :methodSymbol"
       end
       
+      
       @methodArgs = opts[:methodArgs] || []
       
       @first = opts[:firstOnly] || false      
       @default = opts[:default] || nil
       @map = opts[:map] || nil
       @noMapKeyDefault = opts[:noMapKeyDefault] || nil
+      
+      if @solrField.is_a? Array
+        @arity = @solrField.size
+        if @first or @default or @map or @noMapKeyDefault 
+          raise ArgumentError, "Custom spec with multiple solrFields can't have :first, :map, :default, or :noMapKeyDefault set"
+        end
+      else
+        @arity = 1
+      end
+      
       
     end
     

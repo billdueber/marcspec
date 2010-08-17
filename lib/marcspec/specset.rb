@@ -16,6 +16,13 @@ module MARCSpec
       end
       self[key].flatten!      
     end
+
+    def additive_merge! hashlike
+      hashlike.each  do |k, v|
+        self.add(k, v)
+      end
+    end
+    
   end
 
   class SpecSet
@@ -82,8 +89,14 @@ module MARCSpec
     
     def fill_hashlike_from_marc r, hashlike
       @solrfieldspecs.each do |sfs|
-        hashlike.add(sfs.solrField,sfs.marc_values(r, hashlike))
-        # hashlike[sfs.solrField] = sfs.marc_values(r, hashlike)
+        if sfs.arity == 1
+          hashlike.add(sfs.solrField,sfs.marc_values(r, hashlike))
+        else 
+          vals = sfs.marc_values(r, hashlike)
+          (0..(sfs.arity - 1)).each do |i|
+            hashlike.add(sfs.solrField[i], vals[i])
+          end
+        end
       end
     end
 
