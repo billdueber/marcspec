@@ -1,5 +1,7 @@
+0.7.2
+  * Also change methodArgs to functionArgs
 0.7.1
-  * Forgot to update this CHANGES file. 
+  * Forgot to update this CHANGES file.     
 0.7.0
   * Change configuration for custom functions to use :functionSymbol instead of :methodSymbol. Because, you know, they're
     module functions, not class methods. 

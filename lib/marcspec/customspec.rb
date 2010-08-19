@@ -32,7 +32,7 @@ module MARCSpec
 
   class CustomSolrSpec < SolrFieldSpec
     
-    attr_accessor :module, :functionSymbol, :methodArgs
+    attr_accessor :module, :functionSymbol, :functionArgs
     
     # Get a new Custom Solr Spec based on the passed in options. 
     # @param [Hash] opts Initialization options
@@ -58,7 +58,7 @@ module MARCSpec
       end
       
       
-      @methodArgs = opts[:methodArgs] || []
+      @functionArgs = opts[:functionArgs] || []
       
       @first = opts[:firstOnly] || false      
       @default = opts[:default] || nil
@@ -86,7 +86,7 @@ module MARCSpec
     # @return [Array<String>] An array of values returned by the custom method
     
     def raw_marc_values r, doc
-      return @module.send(@functionSymbol, doc, r, *@methodArgs)
+      return @module.send(@functionSymbol, doc, r, *@functionArgs)
     end
     
     
@@ -121,9 +121,9 @@ module MARCSpec
       PP.singleline_pp(@module, s)
       s.print(",\n :functionSymbol => ")
       PP.singleline_pp(@functionSymbol, s)
-      if @methodArgs
-        s.print(",\n :methodArgs => ")
-        PP.singleline_pp(@methodArgs, s)
+      if @functionArgs
+        s.print(",\n :functionArgs => ")
+        PP.singleline_pp(@functionArgs, s)
       end
       s.print "\n}"
       return  s.string

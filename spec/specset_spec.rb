@@ -65,7 +65,7 @@ describe "SpecSet Basics" do
   end
   
   it "allows customs that reference previous work" do
-    @speclist << {:solrField=>'titleSort', :module=>A::B, :functionSymbol=>:sortable, :methodArgs=>['title']}
+    @speclist << {:solrField=>'titleSort', :module=>A::B, :functionSymbol=>:sortable, :functionArgs=>['title']}
     ss = MARCSpec::SpecSet.new
     ss.buildSpecsFromList(@speclist)
     h = ss.hash_from_marc @one
