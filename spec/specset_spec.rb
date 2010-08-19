@@ -65,7 +65,7 @@ describe "SpecSet Basics" do
   end
   
   it "allows customs that reference previous work" do
-    @speclist << {:solrField=>'titleSort', :module=>A::B, :methodSymbol=>:sortable, :methodArgs=>['title']}
+    @speclist << {:solrField=>'titleSort', :module=>A::B, :functionSymbol=>:sortable, :methodArgs=>['title']}
     ss = MARCSpec::SpecSet.new
     ss.buildSpecsFromList(@speclist)
     h = ss.hash_from_marc @one
@@ -86,7 +86,7 @@ describe "SpecSet Basics" do
   it "should allow multi-headed custom fields" do
     @speclist << {:solrField => ['one', 'two', 'letters'],
                   :module => A::B,
-                  :methodSymbol => :three_value_custom,
+                  :functionSymbol => :three_value_custom,
       }
     ss = MARCSpec::SpecSet.new
     ss.buildSpecsFromList(@speclist)

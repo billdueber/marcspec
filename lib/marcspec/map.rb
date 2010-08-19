@@ -2,7 +2,12 @@ module MARCSpec
   
   # A Map is just a named lookup table. The access
   # (via []) takes, in adition to a key, an optional
-  # default value to return 
+  # default value to return (e.g., val = map[key, defaultIfNotFound])
+  #
+  # We don't have the default be a part of the map because it might be used
+  # in several different contexts.
+  #
+  # NOTE: THIS IS AN ABSTRACT SUPERCLASS. DO NOT INSTANTIATE IT DIRECTLY
   
   class Map
     attr_accessor :mapname, :map
@@ -10,12 +15,21 @@ module MARCSpec
     # Create a new map. The passed map is either
     # a standard hash or a list of duples
     #
-    # @param
+    # @param [String] mapname The name of this map; can be used to find it later on.
+    # @param [Hash, Array<2-value-arrays>] map Either a normal key-value hash (for a KV Map) or an
+    # array of duples (2-value arrays) for a MultiValueMap.
     def initialize(mapname, map)
       @mapname = mapname
       @map = map
     end
 
+    # Load a map from a file, determining what kind it is along the way.
+    #
+    # The file is valid ruby code; see the subclasses KVMap and MutlValueMap for examples.
+    #
+    # @param [String] filename The name of the map file to be eval'd 
+    # @return MARC2Solr::Map An instance of a subclass of MARC2Solr::Map
+    
     def self.fromFile filename
       begin
         str = File.open(filename).read
@@ -44,14 +58,18 @@ module MARCSpec
     end
       
 
+    # Check for map equality
     def == other
       return ((other.mapname == self.mapname) and (other.map = self.map))
     end
     
+    # Generic pretty_print; used mostly for translating from solrmarc
     def pretty_print pp
       pp.pp eval(self.asPPString)
     end
     
+    # Produce a map from the data structure produced by asPPString
+    # @param [Hash] rawmap A hash with two keys; :mapname and :map
     def self.fromHash rawmap
       return self.new(rawmap[:mapname], rawmap[:map])
     end

@@ -8,6 +8,8 @@ module MARCSpec
 
   # A KVMap is, when push comes to shove, just a hash with a name, and the 
   # option of adding a default value for each lookup.
+  #
+  # The map portion of a kvmap is simply a hash.
   
   class KVMap < Map
     
@@ -38,12 +40,18 @@ module MARCSpec
       end
     end    
     
+    # Set an element in the map, just like for a regular hash
     def []= key, value
       @map[key] = value
     end
     
     alias_method :add, :[]=
     
+    
+    # Produce a configuration file that will round-trip to this object.
+    #
+    # @return [String] A string representation of valid ruby code that can be turned back into 
+    # this object using MARCSpec::Map#fromFile
     def asPPString
       s = StringIO.new
       s.print "{\n :maptype=>:kv,\n :mapname=>"
@@ -54,7 +62,11 @@ module MARCSpec
       return s.string
     end
     
-        
+    
+    # Translate from a solrmarc map file that has *already been determined* to be a KV map
+    # @param [String] filename The path to the solrmarc kv map file
+    # @return [MARCSpec::KVMap] a KVMap
+    
     def self.from_solrmarc_file filename
       mapname = File.basename(filename).sub(/\..+?$/, '')
       map = {}

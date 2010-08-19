@@ -165,29 +165,29 @@ describe "CustomSolrSpec" do
   end
   
   it "works with no args or map" do
-    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :methodSymbol=>:titleUp)
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp)
     css.marc_values(@one).should.equal [@one['245'].value.upcase]
   end
 
   it "accepts nil for no args" do
-    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>nil)
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :methodArgs=>nil)
     css.marc_values(@one).should.equal [@one['245'].value.upcase]
   end
 
   
   it "uses a custom method with args but no map" do
-    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
     css.marc_values(@one).should.equal [@titleACValue.upcase]
   end
   
   it "works with a map" do
-    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :functionSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
     css.marc_values(@one).should.equal [@mapValue]
   end
   
   it "works with a map that has multiple return values" do 
     @map[@titleACValue.upcase] = ['two', 'one']
-    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :methodSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
+    css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :functionSymbol=>:titleUp, :methodArgs=>[['a', 'c']])
     css.marc_values(@one).should.equal ['two', 'one']
   end
   

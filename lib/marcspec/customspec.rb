@@ -5,10 +5,12 @@ require 'marcspec/solrfieldspec'
 module MARCSpec
 
   # A CustomSolrSpec is a SolrFieldSpec that derives all its values from a custom function. The custom function
-  # must me a module function that takes a record and an array of other arguments and returns a 
+  # must me a module function that takes a hash-like document object, a MARC4J4R record, and an array of other arguments and returns a 
   # (possibly empty) list of resulting values.
   #
-  # @example
+  # See the example file simple_sample/index.rb in the marc2solr project for configuration examples.
+  #
+  # @example A sample custom function, to be placed in the configuration directory's lib/ subdir
   #  module MARC2Solr
   #   module MyCustomStuff
   #     def self.uppercaseTitle r, args=[]
@@ -19,25 +21,40 @@ module MARCSpec
   #   end
   # end
   #
+  # @example A simple custom spec made by hand
   # css = MARCSpec::CustomSolrSpec.new(:module => MARC2Solr::MyCustomStuff,
-  #                                    :methodSymbol => :uppercaseTitle,
+  #                                    :functionSymbol => :uppercaseTitle,
   #                                    :map => ss.map('mapname')
   #                                   )
-  # ss.add_spec(css)
   #
   # 
   
 
   class CustomSolrSpec < SolrFieldSpec
     
-    attr_accessor :module, :methodSymbol, :methodArgs
+    attr_accessor :module, :functionSymbol, :methodArgs
+    
+    # Get a new Custom Solr Spec based on the passed in options. 
+    # @param [Hash] opts Initialization options
+    # @option opts [String, Array<String>] :solrField the name(s) of the Solr field(s) that will receive the data derived from this spec
+    # @option opts [Module] :module the actual module constant (not a string or symbol representation) which holds the 
+    # custom function we'll be calling
+    # @option opts [Symbol] :functionSymbol A symbol of the name of the custom function
+    # @option opts [Boolean] :firstOnly (false) Whether we should return the first found value
+    # @option opts [String] :default (nil) The value to return if the custom function returns no values
+    # @option opts [MARC2Solr::Map] :map (nil) An optional Map used to translate resulting values
+    # @option opts [String] :noMapKeyDefault (nil) The value to return if (a) a value is found, (b) a map is defined, but (c) there's
+    # no key in the map that matches the value. 
+    #
+    # Note that the last four options don't make sense if multiple :solrFields are given, and are illegal in that case.
+    
     def initialize(opts)
       @solrField  = opts[:solrField]
       @module = opts[:module]
-      @methodSymbol = opts[:methodSymbol]
+      @functionSymbol = opts[:functionSymbol]
 
-      unless @solrField and @module and @methodSymbol
-        raise ArgumentError, "Custom solr spec must have a field name in :solrField, module in :module, and the method name as a symbol in :methodSymbol"
+      unless @solrField and @module and @functionSymbol
+        raise ArgumentError, "Custom solr spec must have a field name in :solrField, module in :module, and the method name as a symbol in :functionSymbol"
       end
       
       
@@ -60,10 +77,18 @@ module MARCSpec
       
     end
     
+    # Get values from a MARC object and/or the prevously-filled document object.
+    #
+    # Note that the doc is read-write here, but for the love of god, just leave it alone.
+    #
+    # @param [MARC4J4R::Record] r A marc record
+    # @param [SolrInputDocument, Hash] doc The document we're constructing. 
+    # @return [Array<String>] An array of values returned by the custom method
     
     def raw_marc_values r, doc
-      return @module.send(@methodSymbol, doc, r, *@methodArgs)
+      return @module.send(@functionSymbol, doc, r, *@methodArgs)
     end
+    
     
     def self.fromHash h
       return self.new(h)
@@ -94,8 +119,8 @@ module MARCSpec
       
       s.print(":module => ")
       PP.singleline_pp(@module, s)
-      s.print(",\n :methodSymbol => ")
-      PP.singleline_pp(@methodSymbol, s)
+      s.print(",\n :functionSymbol => ")
+      PP.singleline_pp(@functionSymbol, s)
       if @methodArgs
         s.print(",\n :methodArgs => ")
         PP.singleline_pp(@methodArgs, s)
