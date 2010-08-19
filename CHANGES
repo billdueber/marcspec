@@ -1,3 +1,9 @@
+0.7.1
+  * Forgot to update this CHANGES file. 
+0.7.0
+  * Change configuration for custom functions to use :functionSymbol instead of :methodSymbol. Because, you know, they're
+    module functions, not class methods. 
+  * Split out marcspec stuff into multiple files (leader/control/variable fields).
 0.6.0
   * Allow custom functions to return values for multiple solr fields at once; should help avoid duplication of work.
 0.5.0
