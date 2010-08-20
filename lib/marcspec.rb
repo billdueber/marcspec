@@ -17,15 +17,9 @@ require "marcspec/marcfieldspec"
 # It's just a hash.
 
 module CacheSpot
-  def cacheadd k, v
+  def cachespot
     @_cachespot ||= {}
-    @_cachespot[k] = v
-    return v
-  end
-  
-  def cacheget k
-    @_cachespot ||= {}
-    return @_cachespot[k]
+    return @_cachespot
   end
 end
 
