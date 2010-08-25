@@ -36,15 +36,17 @@ module MARCSpec
       mapname = File.basename(filename).sub(/\..+?$/, '')
       kvlist = []
       File.open(filename) do |f|
-        f.each_line do |line|
-          match = /^pattern.*?=\s*(.*?)\s*=>\s*(.*?)\s*$/.match(line)
-          unless match
+        prop = Java::java.util.Properties.new
+        prop.load(f.to_inputstream)
+        prop.each do |patstring,kv|
+          unless patstring =~ /^pattern/ and kv =~ /.+=>.+/
             $LOG.warn "MultiValueMap import skipping weird line in #{filename}\n  #{l}"
             next
           end
+          match = /^\s*(.+?)\s*=>\s*(.+?)\s*$/.match(kv)
           kvlist << [Regexp.new(match[1]), match[2]]
         end
-      end
+      end        
       return self.new(mapname, kvlist)
     end
         

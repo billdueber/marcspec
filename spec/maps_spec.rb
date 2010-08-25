@@ -56,6 +56,13 @@ describe "Maps" do
     map["nl"].should.equal "New Caledonia"
   end
   
+  it "should correctly deal with solrmarc files with escaped chars (via \\)" do
+    map = MARCSpec::KVMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/location_map.properties"
+    map['AAEL'].should.equal 'AAEL'
+    map['AAEL MICE'].should.equal 'AAEL MICE'
+    map['BUHR AAEL'].should.equal 'BUHR'
+  end
+  
   it "should read a pattern solrmarc file" do
     map = MARCSpec::MultiValueMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/library_map.properties"
     map.mapname.should.equal 'library_map'

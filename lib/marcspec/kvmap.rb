@@ -64,6 +64,10 @@ module MARCSpec
     
     
     # Translate from a solrmarc map file that has *already been determined* to be a KV map
+    #
+    # Uses the underlying java Properties class to avoid having to rewrite all the esacping 
+    # logic.
+    #
     # @param [String] filename The path to the solrmarc kv map file
     # @return [MARCSpec::KVMap] a KVMap
     
@@ -71,20 +75,15 @@ module MARCSpec
       mapname = File.basename(filename).sub(/\..+?$/, '')
       map = {}
       File.open(filename) do |smf|
-        smf.each_line do |l|
-          l.chomp!
-          next unless l =~ /\S/
-          l.strip!
-          next if l =~ /^#/
-          unless l =~ /^(.+?)\s*=\s*(.+)$/
-            $LOG.warn "KVMap import skipping weird line in #{filename}\n  #{l}"
-            next
-          end
-          map[$1] = $2
+        prop = Java::java.util.Properties.new
+        prop.load(smf.to_inputstream)
+        prop.each do |k,v|
+          map[k] = v
         end
       end
       return self.new(mapname, map)
     end
+            
     
     
   end
