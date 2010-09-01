@@ -1,3 +1,6 @@
+0.8.0
+  * Changed the syntax for a variable field from ['245', '*', '*', 'ab'] to just ['245', 'ab']. We'll worry
+    about indicators when that bridge gets crossed.
 0.7.3
   * Squashed a bug where I forgot to deal with escaping in java .properties files. Now I'm just using 
     a real Java Properties object so I don't have to worry about it.

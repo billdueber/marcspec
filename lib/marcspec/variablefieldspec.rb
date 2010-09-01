@@ -15,7 +15,7 @@ module MARCSpec
   
   class VariableFieldSpec
 
-    attr_accessor :tag, :codes, :joiner
+    attr_accessor :tag, :codes, :joiner, :ind1, :ind2
 
     def initialize tag, codes=nil, joiner=' '
       @tag = tag
@@ -63,16 +63,16 @@ module MARCSpec
     def asPPString
       s = StringIO.new
       if @joiner and @joiner != ' '
-        PP.pp([@tag, '*', '*', @codes.join(''), @joiner], s)
+        PP.pp([@tag, @codes.join(''), @joiner], s)
       else
-        PP.pp([@tag, '*', '*', @codes.join('')], s)
+        PP.pp([@tag, @codes.join('')], s)
       end
       return s.string
     end
 
    def self.fromPPString str
      a = eval(str)
-     return self.new(a[0], a[3], a[4])
+     return self.new(a[0], a[1], a[2])
    end
 
   end

@@ -1,4 +1,6 @@
 require 'stringio'
+require 'marc4j4r/controlfield'
+
 module MARCSpec
   class SolrFieldSpec
     attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default, :arity
@@ -77,10 +79,10 @@ module MARCSpec
     def self.fromHash h
       sfs = self.new(h)
       h[:specs].each do |s|
-        if s.size < 3 
+        if MARC4J4R::ControlField.control_tag? s[0]
           sfs << MARCSpec::ControlFieldSpec.new(*s)
         else
-          sfs << MARCSpec::VariableFieldSpec.new(s[0], s[3], s[4])
+          sfs << MARCSpec::VariableFieldSpec.new(s[0], s[1], s[2])
         end
       end
       return sfs

@@ -1,5 +1,5 @@
 require 'jruby_streaming_update_solr_server'
-
+require 'marc4j4r'
 
     
 

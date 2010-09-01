@@ -41,15 +41,15 @@ describe "SpecSet Basics" do
       {
        :solrField=> "places",
        :specs => [
-        ["260", "*", "*", "a"],
-        ["651", "*", "*", "a"],
-        ["651", "*", "*", "z"],
+        ["260",  "a"],
+        ["651",  "a"],
+        ["651",  "z"],
        ]
       },
-     {:solrField=>'title', :specs=>[['245', '*', '*']]},
+     {:solrField=>'title', :specs=>[['245']]},
       {
         :solrField => 'titleA',
-        :specs => [['245', '*', '*', 'a']]
+        :specs => [['245',  'a']]
       }
     ]
   end
@@ -74,7 +74,7 @@ describe "SpecSet Basics" do
   end
   
   it "should allow repeated solrFields" do
-    @speclist << {:solrField=>'titleA', :specs=>[['260', '*', '*', 'c']]} # '1939.'
+    @speclist << {:solrField=>'titleA', :specs=>[['260',  'c']]} # '1939.'
     expected = @titleA
     expected << '1939.'
     ss = MARCSpec::SpecSet.new
