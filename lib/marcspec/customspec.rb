@@ -54,7 +54,7 @@ module MARCSpec
       @functionSymbol = opts[:functionSymbol]
 
       unless @solrField and @module and @functionSymbol
-        raise ArgumentError, "Custom solr spec must have a field name in :solrField, module in :module, and the method name as a symbol in :functionSymbol"
+        raise ArgumentError, "Custom solr spec must have a field name in :solrField, module in :module, and the function name as a symbol in :functionSymbol"
       end
       
       

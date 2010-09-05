@@ -164,6 +164,18 @@ describe "CustomSolrSpec" do
     @map = MARCSpec::KVMap.new('nameOfTheMap', {@titleACValue.upcase => @mapValue, @default=>@mapValueForDefault})
   end
   
+  it "requires solrfield, module, and function" do
+    lambda{
+      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField')
+    }.should.raise ArgumentError
+    lambda{
+      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B)
+    }.should.raise ArgumentError
+    lambda{
+      css = MARCSpec::CustomSolrSpec.new(:module=>A::B, :functionSymbol=>:titleUp)
+    }.should.raise ArgumentError
+  end
+  
   it "works with no args or map" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp)
     css.marc_values(@one).should.equal [@one['245'].value.upcase]
@@ -191,6 +203,14 @@ describe "CustomSolrSpec" do
     css.marc_values(@one).should.equal ['two', 'one']
   end
   
+  it "disallows multispecs with maps or default values" do
+    lambda{
+      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :map=>@map)
+    }.should.raise ArgumentError
+    lambda{
+      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :default=>"bill")
+    }.should.raise ArgumentError
+  end
   
 end
   

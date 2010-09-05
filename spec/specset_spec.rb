@@ -95,8 +95,6 @@ describe "SpecSet Basics" do
     h['two'].should.equal [2]
     h['letters'].should.equal ['a', 'b']
   end
-    
-    
 end
    
 

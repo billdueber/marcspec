@@ -87,6 +87,12 @@ describe "LeaderSpec" do
     @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
   end
   
+  it "must use LDR as the tag" do
+    lambda{
+      cfs = MARCSpec::LeaderSpec.new('008')
+    }.should.raise ArgumentError
+  end
+  
   it "Works with full leader" do
     cfs = MARCSpec::LeaderSpec.new('LDR')
     cfs.marc_values(@one).should.equal @one.leader
