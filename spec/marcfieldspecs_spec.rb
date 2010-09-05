@@ -47,6 +47,38 @@ describe "ControlFieldSpec" do
     cfs2 = MARCSpec::ControlFieldSpec.fromPPString(cfs.asPPString)
     cfs.should.equal cfs2
   end    
+  
+  it "throws an error if you try to use a datafield tag" do
+    lambda{
+      cfs = MARCSpec::ControlFieldSpec.new('010', 6..10 )
+    }.should.raise ArgumentError
+  end
+  
+  it "accepts various forms for the range" do
+    cfs1 = MARCSpec::ControlFieldSpec.new('001')
+    cfs2 = MARCSpec::ControlFieldSpec.new('001')
+    cfs3 = MARCSpec::ControlFieldSpec.new('001')
+    
+    # Range 4-7 is 9999
+    cfs1.range = 4
+    cfs2.range = 4..4
+    cfs1.marc_values(@one).should.equal ['9']
+    cfs2.marc_values(@one).should.equal ['9']
+  end
+  
+  it "rejects bad ranges" do
+    lambda{
+      cfs = MARCSpec::ControlFieldSpec.new('010', -1)
+    }.should.raise ArgumentError
+
+    lambda{
+      cfs = MARCSpec::ControlFieldSpec.new('010', -1..3)
+    }.should.raise ArgumentError
+    
+    lambda{
+      cfs = MARCSpec::ControlFieldSpec.new('010', [1,2,3])
+    }.should.raise ArgumentError
+  end
 end
 
 

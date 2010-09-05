@@ -21,7 +21,7 @@ module MARCSpec
     
     def initialize (tag, range=nil)
       unless MARC4J4R::ControlField.control_tag? tag
-        raise ArgumentError "Tag must be a control tag"
+        raise ArgumentError, "Tag must be a control tag"
       end
       @tag = tag
       self.range = range
@@ -53,7 +53,11 @@ module MARCSpec
         @range = range..range
       
       elsif range.is_a? Range
-        @range = range
+        if range.begin < 1 or range.begin > range.end
+          raise ArgumentError "Range must be one-based, with the start before the end, not #{range}"
+        else
+          @range = range
+        end
       else
         raise ArgumentError, "Range must be nil, an integer offset (1-based), or a Range, not #{range.inspect}"
       end
