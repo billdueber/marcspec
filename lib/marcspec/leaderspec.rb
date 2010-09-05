@@ -15,7 +15,7 @@ module MARCSpec
     
     def initialize (tag, range=nil)
       unless tag == 'LDR'
-        raise ArgumentError "Tag must be 'LDR' for a LeaderSpec"
+        raise ArgumentError, "Tag must be 'LDR' for a LeaderSpec"
       end
       @tag = 'LDR'
       self.range = range

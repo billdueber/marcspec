@@ -1,3 +1,6 @@
+0.8.1
+  * Added some specs, squashed some bugs. In particular, make sure the Range passed to a ControlField
+    makes sense (x..y, where x<=y and x > 0)
 0.8.0
   * Changed the syntax for a variable field from ['245', '*', '*', 'ab'] to just ['245', 'ab']. We'll worry
     about indicators when that bridge gets crossed.

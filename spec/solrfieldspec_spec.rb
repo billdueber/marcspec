@@ -205,10 +205,10 @@ describe "CustomSolrSpec" do
   
   it "disallows multispecs with maps or default values" do
     lambda{
-      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :map=>@map)
+      css = MARCSpec::CustomSolrSpec.new(:solrField=>['s1', 's2'], :module=>A::B, :functionSymbol=>:titleUp, :map=>@map)
     }.should.raise ArgumentError
     lambda{
-      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :default=>"bill")
+      css = MARCSpec::CustomSolrSpec.new(:solrField=>['s1', 's2'], :module=>A::B, :functionSymbol=>:titleUp, :default=>"bill")
     }.should.raise ArgumentError
   end
   
