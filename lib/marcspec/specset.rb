@@ -1,6 +1,6 @@
 require 'jruby_streaming_update_solr_server'
 require 'marc4j4r'
-
+require 'benchmark'
     
 
 module MARCSpec
@@ -26,11 +26,12 @@ module MARCSpec
   end
 
   class SpecSet
-    attr_accessor :tmaps, :solrfieldspecs
+    attr_accessor :tmaps, :solrfieldspecs, :benchmarks
     
     def initialize
       @tmaps = {}
       @solrfieldspecs = []
+      @benchmarks = {}
     end
     
     def map name
@@ -77,6 +78,7 @@ module MARCSpec
     
     def add_spec solrfieldspec
       self.solrfieldspecs << solrfieldspec
+      @benchmarks[solrfieldspec.solrField] = Benchmark::Tms.new(0,0,0,0, 0, solrfieldspec.solrField)      
     end
     
     alias_method :<<, :add_spec
@@ -100,15 +102,39 @@ module MARCSpec
       end
     end
 
-    def doc_from_marc r
+    def fill_hashlike_from_marc_benchmark r, hashlike
+      @solrfieldspecs.each do |sfs|
+        @benchmarks[sfs.solrField] += Benchmark.measure do
+          if sfs.arity == 1
+            hashlike.add(sfs.solrField,sfs.marc_values(r, hashlike))
+          else 
+            vals = sfs.marc_values(r, hashlike)
+            (0..(sfs.arity - 1)).each do |i|
+              hashlike.add(sfs.solrField[i], vals[i])
+            end
+          end
+        end
+      end
+    end
+
+
+    def doc_from_marc r, timeit = false
       doc = SolrInputDocument.new
-      fill_hashlike_from_marc r, doc
+      if timeit
+        fill_hashlike_from_marc_benchmark r, doc
+      else 
+        fill_hashlike_from_marc r, doc
+      end
       return doc
     end      
     
-    def hash_from_marc r
+    def hash_from_marc r, timeit = false
       h = MARCSpec::MockSolrDoc.new
-      fill_hashlike_from_marc r, h
+      if timeit
+         fill_hashlike_from_marc_benchmark r, h
+       else 
+         fill_hashlike_from_marc r, h
+       end
       return h
     end
   end

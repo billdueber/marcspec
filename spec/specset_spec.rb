@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+positive = lambda{|x| x > 0}
+
 module A
   module B
     def self.titleUp doc, r, codes=nil
@@ -46,7 +48,10 @@ describe "SpecSet Basics" do
         ["651",  "z"],
        ]
       },
-     {:solrField=>'title', :specs=>[['245']]},
+      {
+       :solrField=>'title', 
+       :specs=>[['245']]
+      },
       {
         :solrField => 'titleA',
         :specs => [['245',  'a']]
@@ -96,7 +101,47 @@ describe "SpecSet Basics" do
     h['letters'].should.equal ['a', 'b']
   end
 end
-   
+
+describe "Specset Benchmarking" do
+  before do
+    @reader = MARC4J4R::Reader.new("#{DIR}/data/batch.dat")    
+    @speclist = [
+      {
+       :solrField=>'title', 
+       :specs=>[['245']]
+      },
+      {
+       :solrField=> "places",
+       :specs => [
+        ["260",  "a"],
+        ["651",  "a"],
+        ["651",  "z"],
+       ]
+      },      
+      {
+        :solrField => 'titleA',
+        :specs => [['245',  'a']]
+      }
+    ]
+    
+    @ss = MARCSpec::SpecSet.new
+    @ss.buildSpecsFromList(@speclist)    
+  end
+  
+  it "should benchmark" do
+    @reader.each do |r|
+      h = @ss.hash_from_marc(r, true)
+    end
+    @ss.solrfieldspecs.each do |sfs|
+      @ss.benchmarks[sfs.solrField].real.should.be positive
+    end
+    
+    # @ss.benchmarks.each do |k,v|
+    #   puts "%-10s %s" % [k + ':', v.to_s]
+    # end
+  end
+end
+    
 
 
 
