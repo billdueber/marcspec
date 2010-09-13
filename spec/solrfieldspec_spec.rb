@@ -244,4 +244,12 @@ describe "ConstantSpec" do
       lambda{c = MARCSpec::ConstantSpec.new(opts)}.should.raise ArgumentError
     end
   end
+  
+  it "should round trip" do
+    c = MARCSpec::ConstantSpec.new(:solrField=>"test", :constantValue=>"value")
+    s = StringIO.new
+    s.puts(c.asPPString)
+    d = MARCSpec::ConstantSpec.fromPPString(s.string)
+    c.should.equal d
+  end
 end
