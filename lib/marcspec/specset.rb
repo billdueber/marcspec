@@ -28,23 +28,16 @@ module MARCSpec
   class SpecSet
     attr_accessor :tmaps, :solrfieldspecs, :benchmarks
     
-    # Just get a new, blank object
     def initialize
       @tmaps = {}
       @solrfieldspecs = []
       @benchmarks = {}
     end
     
-    # Return the map associated with the given mapname
-    # @param [String] mapname The name of the map
-    # @return [MARCSpec::Map, nil] The map, or nil if not found
-    def map mapname
-      return self.tmaps[mapname]
+    def map name
+      return self.tmaps[name]
     end
     
-    # Load all the maps in a given direcotry
-    # @param [String] dir The directory name/path. Uses MARCSpec::Map#fromFile to do the actually loading;
-    # that will throw an error if something goes wrong.
     def loadMapsFromDir dir
       unless File.exist? dir
         raise ArgumentError, "Cannot load maps from #{dir}: does not exist"
@@ -55,8 +48,7 @@ module MARCSpec
     end
     
   
-    # Add a map to the maps list. Will index it under its #mapname, overwriting anything already there.
-    # @param [MARCSpec::Map] map The map to add
+    
     def add_map map
       self.tmaps[map.mapname] = map
     end
