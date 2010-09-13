@@ -2,7 +2,7 @@ require 'marcspec/solrfieldspec'
 
 
 module MARCSpec
-  class ConstantSpec < SolrFieldSpec
+  class ConstantSolrSpec < SolrFieldSpec
     attr_accessor :constantValue
     
     #attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default, :arity

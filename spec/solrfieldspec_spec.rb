@@ -214,16 +214,16 @@ describe "CustomSolrSpec" do
   
 end
 
-describe "ConstantSpec" do
+describe "ConstantSolrSpec" do
   it "sets correct fields" do
-    c = MARCSpec::ConstantSpec.new(:solrField=>"test", :constantValue=>"value")
+    c = MARCSpec::ConstantSolrSpec.new(:solrField=>"test", :constantValue=>"value")
     c.solrField.should.equal 'test'
     c.constantValue.should.equal 'value'
   end
   
   it "allows array of values" do 
     value = ['a', 'b', 'c']
-    c = MARCSpec::ConstantSpec.new(:solrField=>"test", :constantValue=>value)
+    c = MARCSpec::ConstantSolrSpec.new(:solrField=>"test", :constantValue=>value)
     c.constantValue.should.equal value
   end
 
@@ -241,15 +241,15 @@ describe "ConstantSpec" do
     opts = {:solrField=>'test'}
     opts[k] = v
     it "raises ArgumentError if given invalid option #{k}" do
-      lambda{c = MARCSpec::ConstantSpec.new(opts)}.should.raise ArgumentError
+      lambda{c = MARCSpec::ConstantSolrSpec.new(opts)}.should.raise ArgumentError
     end
   end
   
   it "should round trip" do
-    c = MARCSpec::ConstantSpec.new(:solrField=>"test", :constantValue=>"value")
+    c = MARCSpec::ConstantSolrSpec.new(:solrField=>"test", :constantValue=>"value")
     s = StringIO.new
     s.puts(c.asPPString)
-    d = MARCSpec::ConstantSpec.fromPPString(s.string)
+    d = MARCSpec::ConstantSolrSpec.fromPPString(s.string)
     c.should.equal d
   end
 end

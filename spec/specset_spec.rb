@@ -55,18 +55,36 @@ describe "SpecSet Basics" do
       {
         :solrField => 'titleA',
         :specs => [['245',  'a']]
+      },
+      {
+        :solrField => 'constantField',
+        :constantValue => ['A', 'B']
       }
     ]
+    
+    @ss = MARCSpec::SpecSet.new
+    @ss.buildSpecsFromList(@speclist)
+    @h = @ss.hash_from_marc @one
+    
   end
   
-  it "should build from a list" do 
-    ss = MARCSpec::SpecSet.new
-    ss.buildSpecsFromList(@speclist)
-    ss.solrfieldspecs.size.should.equal 3
-    h = ss.hash_from_marc @one
-    h['places'].sort.should.equal @places.sort
-    h['title'].should.equal @title
-    h['titleA'].should.equal @titleA
+  it "should get all the specs" do
+    @ss.solrfieldspecs.size.should.equal 4
+  end
+  
+  it "gets the places field" do
+    @h['places'].sort.should.equal @places.sort
+  end
+  
+  correct = {
+    'title' => @title,
+    'titleA' => @titleA,
+    'constantField' => ['A', 'B']
+  }
+  correct.each do |k,v|
+    it "gets correct value for #{k}" do
+      @h[k].should.equal v
+    end
   end
   
   it "allows customs that reference previous work" do
@@ -101,6 +119,8 @@ describe "SpecSet Basics" do
     h['letters'].should.equal ['a', 'b']
   end
 end
+
+
 
 describe "Specset Benchmarking" do
   before do

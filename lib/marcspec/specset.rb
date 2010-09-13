@@ -58,6 +58,8 @@ module MARCSpec
       speclist.each do |spechash|
         if spechash[:module]
           solrspec = MARCSpec::CustomSolrSpec.fromHash(spechash)
+        elsif spechash[:constantValue]
+          solrspec = MARCSpec::ConstantSolrSpec.fromHash(spechash)
         else
           solrspec = MARCSpec::SolrFieldSpec.fromHash(spechash)
         end
