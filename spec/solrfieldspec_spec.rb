@@ -213,4 +213,35 @@ describe "CustomSolrSpec" do
   end
   
 end
+
+describe "ConstantSpec" do
+  it "sets correct fields" do
+    c = MARCSpec::ConstantSpec.new(:solrField=>"test", :constantValue=>"value")
+    c.solrField.should.equal 'test'
+    c.constantValue.should.equal 'value'
+  end
   
+  it "allows array of values" do 
+    value = ['a', 'b', 'c']
+    c = MARCSpec::ConstantSpec.new(:solrField=>"test", :constantValue=>value)
+    c.constantValue.should.equal value
+  end
+
+  bad = {
+    :firstOnly => true,
+    :default => 'default',
+    :noMapKeyDefault => 'nmd',
+    :mapname => 'map',
+    :specs => [],
+    :module => MARCSpec,
+    :functionSymbol => :test
+  }
+
+  bad.each do |k,v|
+    opts = {:solrField=>'test'}
+    opts[k] = v
+    it "raises ArgumentError if given invalid option #{k}" do
+      lambda{c = MARCSpec::ConstantSpec.new(opts)}.should.raise ArgumentError
+    end
+  end
+end
