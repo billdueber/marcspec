@@ -60,7 +60,7 @@ module MARCSpec
 
     # Check for map equality
     def == other
-      return ((other.mapname == self.mapname) and (other.map = self.map))
+      return ((other.mapname == @mapname) and (other.map == @map))
     end
     
     # Generic pretty_print; used mostly for translating from solrmarc

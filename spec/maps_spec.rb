@@ -3,7 +3,14 @@ require 'spec_helper'
 describe "Maps" do
   before do
     @kvmap = MARCSpec::KVMap.new('kvmap', {'one' => '1', 'two' => ['2', 'zwei']})
-    @mvmap = MARCSpec::MultiValueMap.new('mvmap', [[/bi/, 'Bill'], [/mo/i, 'Molly'], [/ll/, 'Bill'], [/lly/i, ['One', 'Two']]])
+    @mvmap = MARCSpec::MultiValueMap.new('mvmap', [
+                                                  [/bi/, 'Bill'], 
+                                                  [/mo/i, 'Molly'], 
+                                                  [/ll/, 'Bill'], 
+                                                  [/lly/i, ['One', 'Two']], 
+                                                  [/^.*?\s+(.*)$/, Proc.new{|m| m[1]}]
+                                                  ]
+                                          )
   end
   
   it "knows its name" do
@@ -44,10 +51,33 @@ describe "Maps" do
     newkvmap.should.equal @kvmap
   end
   
-  it "should round trip a multivaluemap" do 
+  it "should round trip a multivaluemap without a Proc" do 
+    cleanmap = []
+    @mvmap.map.each do |kv|
+      cleanmap.push kv unless kv[1].is_a? Proc
+    end
+    @mvmap.map = cleanmap
     s = @mvmap.asPPString
     newmvmap = MARCSpec::MultiValueMap.fromPPString s
     newmvmap.should.equal @mvmap
+  end
+  
+  it "can't round-trip a multivaluemap with a Proc" do
+    s = @mvmap.asPPString
+    puts s
+    newmvmap = MARCSpec::MultiValueMap.fromPPString s
+    newmvmap.should.not.equal @mvmap
+  end
+  
+  
+  it "can use a proc in a multivaluemap" do
+    @mvmap['Molly Dueber'].sort.should.equal ['Molly', 'Bill', 'Dueber', 'One', 'Two'].sort
+  end
+  
+  it "can use a simple passthrough in a multivaluemap" do
+     @mvmap = MARCSpec::MultiValueMap.new('mvmap', [[/.*/, Proc.new {|m| m[0]}]])
+     @mvmap['one'].should.equal ['one']
+     @mvmap['two'].should.equal ['two']
   end
   
   it "should read a kv solrmarc file" do
