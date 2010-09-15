@@ -65,6 +65,31 @@ describe "SolrFieldSpec" do
     sfs << @nonmatchingSpec
     sfs.marc_values(@one).should.equal [@default]
   end
+end
+
+describe "Solr Field Specs and maps" do
+  
+  before do 
+    @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
+    # @batch = MARC4J4R::Reader.new("#{DIR}/batch.dat").collect
+    @opts = {:solrField=>'solrfield'}
+    @titleAC =  MARCSpec::VariableFieldSpec.new('245', ['a', 'c'])
+    @titleACValue = "The Texas ranger Sung by Beale D. Taylor."
+    @twosixtyC = MARCSpec::VariableFieldSpec.new('260', 'c')
+    @twosixtyCValue = "1939."
+    
+    @nonmatchingSpec =  MARCSpec::VariableFieldSpec.new('999', ['a', 'c'])
+    
+    @default = 'DEFAULT'
+    
+    
+    @mapValue = "twosixtyCMapValue"
+    @mapValueForDefault = 'mapValueForDefaultValue'
+    @noMapKeyDefault = 'noMapKeyDefault'
+    
+    @map = MARCSpec::KVMap.new('nameOfTheMap', {@twosixtyCValue => @mapValue, @default=>@mapValueForDefault})
+    
+  end
   
   it "works with a KV Map and no defaults" do
     @opts[:map] = @map
@@ -91,7 +116,7 @@ describe "SolrFieldSpec" do
     sfs << @nonmatchingSpec
     sfs.marc_values(@one).should.equal [@default]
   end
-  
+    
   it "returns multiple values from a kv map when appropriate" do
     @map[@twosixtyCValue] = ['one', 'two']
     @opts[:map] = @map
@@ -109,7 +134,7 @@ describe "SolrFieldSpec" do
     sfs << @titleAC
     sfs.marc_values(@one).sort.should.equal ['one', 'two', 'three', 'four'].sort
   end
-    
+
   
   it "round trips if you add the map by hand" do
     @opts[:map] = @map

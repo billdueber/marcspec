@@ -26,10 +26,30 @@ describe "Maps" do
     @kvmap['two'].should.equal ['2', 'zwei']
   end
   
-  it "gets nothing on nonmatches" do
+  it "gets nothing on nonmatches for kvmap" do
     @kvmap['ddd'].should.equal nil
-    @mvmap['ddd'].should.equal [nil]
   end
+
+  it "gets nothing on nonmatches for mvmap" do
+    @mvmap['ddd'].should.equal nil
+  end
+  
+  it "gets default if set for nonmatches with KVMap" do
+    @kvmap['ddd', 'default'].should.equal 'default'
+  end
+
+  it "gets default if set for nonmatches with MVMap" do
+    @mvmap['ddd', 'default'].should.equal 'default'
+  end
+  
+  it "gets key if default is :passthrough for nonmatches with KVMap" do
+    @kvmap['ddd', :passthrough].should.equal 'ddd'
+  end
+
+  it "gets key if default is :passthrough for nonmatches with KVMap" do
+    @mvmap['ddd', :passthrough].should.equal 'ddd'
+  end
+
   
   it "gets correct values from multivaluemap" do
     @mvmap['bi'].should.equal ['Bill']
@@ -40,7 +60,7 @@ describe "Maps" do
   
   it "correctly uses default value" do
     @mvmap['bi', 'default'].should.equal ['Bill']
-    @mvmap['ddd', 'default'].should.equal ['default']
+    @mvmap['ddd', 'default'].should.equal 'default'
     @kvmap['ddd', 'default'].should.equal 'default'
     @kvmap['one', 'default'].should.equal '1'
   end
@@ -64,7 +84,6 @@ describe "Maps" do
   
   it "can't round-trip a multivaluemap with a Proc" do
     s = @mvmap.asPPString
-    puts s
     newmvmap = MARCSpec::MultiValueMap.fromPPString s
     newmvmap.should.not.equal @mvmap
   end

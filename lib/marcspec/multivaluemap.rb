@@ -40,7 +40,11 @@ module MARCSpec
       if rv.size > 0
         return rv
       else
-        return [default]
+        if default == :passthrough
+          return key
+        else
+          return default
+        end
       end
     end
     

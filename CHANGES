@@ -1,3 +1,5 @@
+1.1.1
+  * Fixed bug with :noMapKeyDefault => :passthrough for MVMap
 1.1.0
   * Added support for Proc objects as the value in a MVMap
 1.0.0
