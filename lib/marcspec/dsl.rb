@@ -63,6 +63,14 @@ module MARCSpec
         end
       end
       
+      if marcfieldspec.is_a? MARCSpec::ControlFieldSpec
+        marcfieldspec.rangehistory.uniq.compact.each do |r|
+          newcfs = marcfieldspec.clone
+          newcfs.range = r
+          self << newcfs
+        end
+      end
+      
       self << marcfieldspec
       return marcfieldspec
     end

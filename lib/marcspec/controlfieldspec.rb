@@ -17,7 +17,7 @@ module MARCSpec
   # substrings are specified.
   
   class ControlFieldSpec
-    attr_accessor :tag, :range
+    attr_accessor :tag, :range, :rangehistory
     
     def initialize (tag, range=nil)
       unless MARC4J4R::ControlField.control_tag? tag
@@ -25,6 +25,7 @@ module MARCSpec
       end
       @tag = tag
       self.range = range
+      @rangehistory = []
     end
     
     def == other
@@ -41,6 +42,7 @@ module MARCSpec
     # @return [MARCSpec::ControlFieldSpec] self
     
     def range= range
+      @rangehistory << @range if @range
       if range.nil?
         @range = nil
         return self

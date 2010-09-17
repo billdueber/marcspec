@@ -181,6 +181,19 @@ describe "DSL" do
       end
       ss.hash_from_marc(@one)['tst'].should.equal ['c9999']
     end
+    
+    it "allows multiple char/chars per control field" do
+      ss = MARCSpec.build do
+        field("tst") do
+          spec(001) {
+            char  2
+            chars 2..6
+          }
+        end
+      end
+      ss.hash_from_marc(@one)['tst'].should.equal ['c', 'c9999']
+    end
+      
 
   end
 
