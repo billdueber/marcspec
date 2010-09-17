@@ -3,7 +3,8 @@ require 'marc4j4r/controlfield'
 
 module MARCSpec
   class SolrFieldSpec
-    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :defaultValue, :arity
+    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :defaultValue,  :mapname
+    attr_reader :arity
 
     def initialize(opts)
       @solrField  = opts[:solrField]
