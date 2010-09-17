@@ -50,24 +50,19 @@ module MARCSpec
     
     def initialize(opts)
       @solrField  = opts[:solrField]
-      @module = opts[:module]
-      @functionSymbol = opts[:functionSymbol]
+      @module = opts[:module] || nil
+      @functionSymbol = opts[:functionSymbol] || nil
 
-      unless @solrField and @module and @functionSymbol
-        raise ArgumentError, "Custom solr spec must have a field name in :solrField, module in :module, and the function name as a symbol in :functionSymbol"
-      end
-      
-      
       @functionArgs = opts[:functionArgs] || []
       
       @first = opts[:firstOnly] || false      
-      @default = opts[:default] || nil
+      @defaultValue = opts[:default] || nil
       @map = opts[:map] || nil
       @noMapKeyDefault = opts[:noMapKeyDefault] || nil
       
       if @solrField.is_a? Array
         @arity = @solrField.size
-        if @first or @default or @map or @noMapKeyDefault 
+        if @first or @defaultValue or @map or @noMapKeyDefault 
           raise ArgumentError, "Custom spec with multiple solrFields can't have :first, :map, :default, or :noMapKeyDefault set"
         end
       else
@@ -101,9 +96,9 @@ module MARCSpec
       PP.singleline_pp(@solrField, s)
       s.print(",\n ")
       s.print ":firstOnly => true,\n " if @first
-      if @default
+      if @defaultValue
         s.print(":default => ")
-        PP.singleline_pp(@default, s)
+        PP.singleline_pp(@defaultValue, s)
         s.print(",\n ")
       end
       if @map

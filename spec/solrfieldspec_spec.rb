@@ -189,17 +189,6 @@ describe "CustomSolrSpec" do
     @map = MARCSpec::KVMap.new('nameOfTheMap', {@titleACValue.upcase => @mapValue, @default=>@mapValueForDefault})
   end
   
-  it "requires solrfield, module, and function" do
-    lambda{
-      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField')
-    }.should.raise ArgumentError
-    lambda{
-      css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B)
-    }.should.raise ArgumentError
-    lambda{
-      css = MARCSpec::CustomSolrSpec.new(:module=>A::B, :functionSymbol=>:titleUp)
-    }.should.raise ArgumentError
-  end
   
   it "works with no args or map" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp)

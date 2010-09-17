@@ -11,7 +11,7 @@ require "marcspec/kvmap"
 require "marcspec/multivaluemap"
 require "marcspec/specset"
 require "marcspec/marcfieldspec"
-
+require "marcspec/dsl"
 
 # Build up a little module to include in MARC4J4R::Record that
 # gives us a way to cache computed values within the record itself

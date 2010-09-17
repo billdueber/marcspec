@@ -15,12 +15,13 @@ module MARCSpec
   
   class VariableFieldSpec
 
-    attr_accessor :tag, :codes, :joiner, :ind1, :ind2
+    attr_accessor :tag, :codes, :joiner, :ind1, :ind2, :codehistory
 
     def initialize tag, codes=nil, joiner=' '
       @tag = tag
       @joiner = joiner || ' '
       self.codes = codes
+      @codehistory = []
     end
 
     def == other
@@ -30,6 +31,7 @@ module MARCSpec
     end
 
     def codes= c
+      @codehistory << @codes if @codes
       if c.nil?
         @codes = nil
         return nil

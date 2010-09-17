@@ -24,6 +24,8 @@ module MARCSpec
     end
     
   end
+  
+  
 
   class SpecSet
     attr_accessor :tmaps, :solrfieldspecs, :benchmarks

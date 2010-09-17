@@ -3,12 +3,12 @@ require 'marc4j4r/controlfield'
 
 module MARCSpec
   class SolrFieldSpec
-    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default, :arity
+    attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :defaultValue, :arity
 
     def initialize(opts)
       @solrField  = opts[:solrField]
       @first = opts[:firstOnly] || false      
-      @default = opts[:default] || nil
+      @defaultValue = opts[:default] || nil
       @map = opts[:map] || nil
       @noMapKeyDefault = opts[:noMapKeyDefault] || nil
       @arity = 1
@@ -42,10 +42,10 @@ module MARCSpec
       # If we got nothing, just return either nothing or the defualt,
       # if there is one. Don't screw around with mapping.
       if vals.size == 0
-        if @default.nil? # unless there's a default value, just return nothing
+        if @defaultValue.nil? # unless there's a default value, just return nothing
           return []
         else
-          return [@default]
+          return [@defaultValue]
         end
       end
       
@@ -68,6 +68,7 @@ module MARCSpec
       return ((other.solrField == self.solrField) and
              (other.first == self.first) and
              (other.map == self.map) and
+             (other.defaultValue == self.defaultValue) and
              (other.noMapKeyDefault == self.noMapKeyDefault) and
              (other.marcfieldspecs == self.marcfieldspecs))
     end
@@ -98,9 +99,9 @@ module MARCSpec
       PP.singleline_pp(@solrField, s)
       s.print(",\n ")
       s.print ":firstOnly => true,\n " if @first
-      if @default
+      if @defaultValue
         s.print(":default => ")
-        PP.singleline_pp(@default, s)
+        PP.singleline_pp(@defaultValue, s)
         s.print(",\n ")
       end
       if @map
