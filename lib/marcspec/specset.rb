@@ -80,7 +80,7 @@ module MARCSpec
     
     def add_spec solrfieldspec
       self.solrfieldspecs << solrfieldspec
-      @benchmarks[solrfieldspec.solrField] = Benchmark::Tms.new(0,0,0,0, 0, solrfieldspec.solrField)      
+      @benchmarks[solrfieldspec.solrField.to_s] = Benchmark::Tms.new(0,0,0,0, 0, solrfieldspec.solrField)      
     end
     
     alias_method :<<, :add_spec
@@ -106,7 +106,7 @@ module MARCSpec
 
     def fill_hashlike_from_marc_benchmark r, hashlike
       @solrfieldspecs.each do |sfs|
-        @benchmarks[sfs.solrField] += Benchmark.measure do
+        @benchmarks[sfs.solrField.to_s] += Benchmark.measure do
           if sfs.arity == 1
             hashlike.add(sfs.solrField,sfs.marc_values(r, hashlike))
           else 
