@@ -19,24 +19,56 @@ module MARCSpec
   # Again, note that if several keys are === to the passed argument, all the values will be returned. 
   
   class MultiValueMap   < Map
+        
+    # Override initialize and map= so we can do some optimization
     
-    attr_accessor :mapname,:map
+    def initialize *args
+      super(*args)
+      self.optimize
+    end
+    
+    def map= map
+      @map = map
+      self.optimize
+    end
+    
+    
+    def optimize
+      @super_regexp = Regexp.union @map.map{|pv| pv[0]}
+      inverted = {}
+      @map.each do |pv|
+        inverted[pv[1]] ||= []
+        inverted[pv[1]] << pv[0]
+      end
+      inverted.each_pair do |vals, patterns|
+        next unless patterns.size > 1
+        newpat = Regexp.union patterns
+        patterns.each do |p|
+          @map.delete_if{|pv| p == pv[0]}
+        end
+        @map << [newpat, vals]
+      end
+    end
     
     # Given a passed_in_key (and optional default) return the set of values that match, as described
     # above.
     def [] key, default=nil
       rv = []
-      @map.each do |pv|
-        if pv[1].is_a? Proc
-          match = pv[0].match key
-          rv << pv[1].call(match) if match
-        else
-          rv << pv[1] if pv[0] === key
+      
+      if @super_regexp.match key # do *any* of them match?
+        @map.each do |pv|
+          if pv[1].is_a? Proc
+            match = pv[0].match key
+            rv << pv[1].call(match) if match
+          else
+            rv << pv[1] if pv[0] === key
+          end
         end
+        rv.flatten!
+        rv.compact!
+        rv.uniq!
       end
-      rv.flatten!
-      rv.compact!
-      rv.uniq!
+
       if rv.size > 0
         return rv
       else
