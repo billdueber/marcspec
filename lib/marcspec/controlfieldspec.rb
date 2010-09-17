@@ -29,7 +29,7 @@ module MARCSpec
     
     def == other
       return ((self.tag == other.tag) and
-              (self.range = other.range))
+              (self.range == other.range))
     end
     
     
