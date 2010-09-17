@@ -56,6 +56,30 @@ module MARCSpec
     end
     
     
+    def buildSpecsFromDSLFile file
+      self.instance_eval(File.open(file).read)
+      self.check_and_fill_maps
+    end
+    
+    def check_and_fill_maps
+      @solrfieldspecs.each do |sfs|
+        puts sfs.solrField
+        if sfs._mapname
+          map = self.map(sfs._mapname)
+          if map
+            $LOG.debug "  Found map #{map.mapname} for solr field #{sfs.solrField}"
+            solrspec.map = map
+          else
+            $LOG.error "  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
+            STDERR.puts "FATAL  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
+            Process.exit
+          end
+        end
+      end
+    end
+      
+    
+    
     def buildSpecsFromList speclist
       speclist.each do |spechash|
         if spechash[:module]
@@ -69,6 +93,7 @@ module MARCSpec
           map = self.map(spechash[:mapname])
           unless map
             $LOG.error "  Cannot find map #{spechash[:mapname]} for field #{spechash[:solrField]}"
+            Process.exit
           else
             $LOG.debug "  Found map #{spechash[:mapname]} for field #{spechash[:solrField]}"
             solrspec.map = map

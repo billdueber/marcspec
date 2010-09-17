@@ -341,6 +341,29 @@ describe "DSL" do
       ss.hash_from_marc(@one)['tst'].should.equal ['Default']
       ss.hash_from_marc(@one)['id'].should.equal ['c9999']      
     end
+    
+    it "bails on a missing map" do
+      string = %q|
+        field('tst') do
+          default 'Default'
+          mapname 'nosuchmap'
+          spec(999)
+        end
+        
+        field('id') do
+          spec(001) {chars 2..6}
+        end
+      |
+      f = Tempfile.new('ss')
+      f.puts string
+      path = f.path
+      f.close
+      ss = MARCSpec::SpecSet.new
+      lambda{ss.buildSpecsFromDSLFile(path)}.should.raise SystemExit
+      f.unlink
+      
+    end
+    
   end
 
 

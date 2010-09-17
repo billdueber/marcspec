@@ -76,13 +76,16 @@ module MARCSpec
     end
     
     def firstOnly val=true
-      self.first = val
+      @first = val
     end
     
     def default val
-      self.defaultValue = val
+      @defaultValue = val
     end
     
+    def mapname str
+      @_mapname = str
+    end
   end
   
   class ControlFieldSpec

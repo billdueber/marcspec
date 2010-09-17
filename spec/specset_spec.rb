@@ -118,6 +118,12 @@ describe "SpecSet Basics" do
     h['two'].should.equal [2]
     h['letters'].should.equal ['a', 'b']
   end
+  
+  it "bails if it can't find a map" do
+    @speclist << {:solrField => 'tst', :mapname=>'nosuch', :specs => [['245']]}
+    lambda{@ss.buildSpecsFromList(@speclist)}.should.raise SystemExit 
+  end
+  
 end
 
 
