@@ -45,6 +45,13 @@ module MARCSpec
         raise e
       end
       
+      # Derive a name if there isn't one
+      unless rawmap[:mapname]
+        name = File.basename(filename)
+        name.gsub! /\..*$/, '' # remove the extension
+        rawmap[:mapname] = name
+      end
+      
       case rawmap[:maptype]
       when :kv
         return KVMap.new(rawmap[:mapname], rawmap[:map])

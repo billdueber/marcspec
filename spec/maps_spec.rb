@@ -67,6 +67,11 @@ describe "KV Maps" do
     map.class.should.equal MARCSpec::KVMap    
     map.should.equal map2
   end
+  
+  it "can name a map based on the filename when using fromFile(path)" do
+    map = MARCSpec::Map.fromFile("#{DIR}/data/simplemap.rb")
+    map.mapname.should.equal 'simplemap'
+  end
 
 end
 
