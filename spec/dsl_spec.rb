@@ -41,6 +41,10 @@ module SPECHelper
     return 'Hello ' + args.map{|s| s.to_s}.join(' ')
   end
 
+  def self.multihead doc, r
+    return ['one', 'two']
+  end
+
 end
 
 describe "DSL" do
@@ -116,6 +120,19 @@ describe "DSL" do
       end
 
       ss.hash_from_marc(@one)['hello'].should.equal ['Hello 1 2 3 4 5']
+    end
+    
+    it "works with multihead" do
+      ss = MARCSpec.build do
+        custom(['a', 'b']) do
+          function(:multihead) {
+            mod SPECHelper
+          }
+        end
+      end
+
+      ss.hash_from_marc(@one)['a'].should.equal ['one']
+      ss.hash_from_marc(@one)['b'].should.equal ['two']
     end
   end
 
@@ -285,6 +302,24 @@ describe "DSL" do
           spec(001) {
             chars 2..6
           }
+        end
+      |
+
+      ss = MARCSpec::SpecSet.new
+      ss.instance_eval(string)
+      ss.hash_from_marc(@one)['tst'].should.equal ['Default']
+      ss.hash_from_marc(@one)['id'].should.equal ['c9999']      
+    end
+    
+    it "works in compact form" do
+      string = %q|
+        field('tst') do
+          default 'Default'
+          spec(999)
+        end
+        
+        field('id') do
+          spec(001) {chars 2..6}
         end
       |
 
