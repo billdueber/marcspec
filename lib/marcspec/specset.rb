@@ -57,18 +57,19 @@ module MARCSpec
     
     
     def buildSpecsFromDSLFile file
-      self.instance_eval(File.open(file).read)
+      f = File.open(file)
+      $LOG.fatal("Can't open file #{file}") unless f
+      self.instance_eval(f.read)
       self.check_and_fill_maps
     end
     
     def check_and_fill_maps
       @solrfieldspecs.each do |sfs|
-        puts sfs.solrField
         if sfs._mapname
           map = self.map(sfs._mapname)
           if map
             $LOG.debug "  Found map #{map.mapname} for solr field #{sfs.solrField}"
-            solrspec.map = map
+            sfs.map = map
           else
             $LOG.error "  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
             STDERR.puts "FATAL  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
