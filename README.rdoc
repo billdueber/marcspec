@@ -4,7 +4,10 @@ The MARCSpec contains classes designed to make it (relatively) easy to specify
 a data field (my use case specifically is solr) in terms of sets of MARC fields and subfields.
 
 
-== Docs and examples in marc2solr
+== Docs and examples
+
+Docs are hosted at the [[wiki|http://github.com/billdueber/marcspec/wiki/]]
+
 
 Documented samples are available as part of the marc2solr project
 at http://github.com/billdueber/marc2solr -- look in the simple_sample area.
