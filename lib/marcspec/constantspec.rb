@@ -32,6 +32,10 @@ module MARCSpec
       return self.new(h)
     end
     
+    def asDSLString
+      return "constant('#{@solrField}') do\n  value #{@constantValue.inspect}\nend"
+    end
+    
     def asPPString
       s = StringIO.new
       s.print "{\n :solrField=> "

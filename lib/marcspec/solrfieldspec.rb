@@ -94,6 +94,32 @@ module MARCSpec
       pp.pp eval(self.asPPString)
     end
     
+    def asDSLString
+      s = StringIO.new
+      s.puts "field('#{@solrField}') do"
+      s.puts "  firstOnly" if @first
+      if @defaultValue
+        s.puts "  default " + 
+        PP.singleline_pp(@defaultValue + "\n", s)
+      end
+      if @map
+        s.print "  mapname "
+        PP.pp(@map.mapname, s)
+      end
+      if @noMapKeyDefault
+        s.print("  mapMissDefault ")
+        PP.singleline_pp(@noMapKeyDefault, s)
+        s.print("\n ")
+      end
+      @marcfieldspecs.each do |spec|
+        s.puts "  " + spec.asDSLString
+      end
+      s.puts "end"
+      return s.string
+    end
+      
+      
+    
     def asPPString
       s = StringIO.new
       s.print "{\n :solrField=> "

@@ -89,7 +89,35 @@ module MARCSpec
       return self.new(h)
     end
   
-    
+    def asDSLString
+      s = StringIO.new
+      s.puts "custom('#{@solrField}') do"
+      s.puts "  firstOnly" if @first
+      if @defaultValue
+        s.puts "  default " + 
+        PP.singleline_pp(@defaultValue + "\n", s)
+      end
+      if @map
+        s.print "  mapname "
+        PP.pp(@map.mapname, s)
+      end
+      if @noMapKeyDefault
+        s.print("  mapMissDefault ")
+        PP.singleline_pp(@noMapKeyDefault, s)
+        s.print("\n ")
+      end
+
+      s.puts("  function(:#{@functionSymbol}) {")
+      s.puts("    mod  #{@module}")
+      if  @functionArgs and @functionArgs.size > 0
+        args = @functionArgs.map{|a| a.inspect}.join(', ')
+        s.puts "    args #{args}"
+      end
+      s.puts "  }"
+      s.puts "end"
+      return s.string
+    end
+
     def asPPString
       s = StringIO.new
       s.print "{\n :solrField=> "

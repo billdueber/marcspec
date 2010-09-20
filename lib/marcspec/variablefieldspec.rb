@@ -61,6 +61,17 @@ module MARCSpec
     def pretty_print pp
       pp.pp eval(self.asPPString)
     end
+    
+    def asDSLString
+      subs = @codes.join('')
+      if subs.size > 0
+        return "spec('#{@tag}') {subs '#{subs}'}"
+      else
+        return "spec('#{@tag}')"
+      end
+    end
+      
+        
 
     def asPPString
       s = StringIO.new

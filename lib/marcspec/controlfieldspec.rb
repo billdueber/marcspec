@@ -80,6 +80,14 @@ module MARCSpec
       pp.pp eval(self.asPPString)
     end
     
+    def asDSLString
+      if (@range)
+        return "spec('#{@tag}') {chars #{@range}}"
+      else
+        return "spec('#{@tag}')"
+      end
+    end
+    
     def asPPString
       s = StringIO.new
       if @range
