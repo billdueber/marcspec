@@ -13,6 +13,7 @@ module MARCSpec
     
     # create a normal field
     def field(name, &blk)
+      $LOG.debug "Creating regular field #{name}"
       sfs = SolrFieldSpec.new(:solrField=>name)
       sfs.instance_eval(&blk)
       self << sfs
@@ -21,6 +22,8 @@ module MARCSpec
     
     # Create a constant field
     def constant(name, &blk)
+      $LOG.debug "Creating constant field #{name}"
+      
       constant = ConstantSolrSpec.new(:solrField=>name)
       constant.instance_eval(&blk)
       self << constant
@@ -28,6 +31,7 @@ module MARCSpec
     end
     
     def custom(name, &blk)
+      $LOG.debug "Creating custom field #{name}"
       custom = CustomSolrSpec.new(:solrField=>name)
       custom.instance_eval(&blk)
       
@@ -86,6 +90,11 @@ module MARCSpec
     def mapname str
       @_mapname = str
     end
+    
+    def mapMissDefault str
+      @noMapKeyDefault = str
+    end
+    
   end
   
   class ControlFieldSpec
