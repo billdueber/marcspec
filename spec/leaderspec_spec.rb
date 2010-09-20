@@ -25,11 +25,11 @@ describe "LeaderSpec" do
   
   it "Works with full leader" do
     cfs = MARCSpec::LeaderSpec.new('LDR')
-    cfs.marc_values(@one).should.equal @one.leader
+    cfs.marc_values(@one).should ==  @one.leader
   end
   
   it "Works with substring of leader" do
     cfs = MARCSpec::LeaderSpec.new('LDR', 3..5)
-    cfs.marc_values(@one).should.equal @one.leader[3..5]
+    cfs.marc_values(@one).should ==  @one.leader[3..4]
   end
 end

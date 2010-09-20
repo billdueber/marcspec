@@ -60,8 +60,8 @@ describe "DSL" do
           value "Bill"
         end
       end
-      ss.solrfieldspecs.size.should.equal 1
-      ss.hash_from_marc(@one)['id'].should.equal ['Bill']
+      ss.solrfieldspecs.size.should ==  1
+      ss.hash_from_marc(@one)['id'].should ==  ['Bill']
     end
   end
 
@@ -80,7 +80,7 @@ describe "DSL" do
         end
       end
     
-      ss.hash_from_marc(@one)['hello'].should.equal ['Hello']
+      ss.hash_from_marc(@one)['hello'].should ==  ['Hello']
     end
   
     it "builds a custom that can take a single argument" do
@@ -93,7 +93,7 @@ describe "DSL" do
         end
       end
 
-      ss.hash_from_marc(@one)['hello'].should.equal ['Hello Bill']
+      ss.hash_from_marc(@one)['hello'].should ==  ['Hello Bill']
     end
   
     it "builds a custom that can take two arguments" do
@@ -106,7 +106,7 @@ describe "DSL" do
         end
       end
 
-      ss.hash_from_marc(@one)['hello'].should.equal ['Hello Bill Dueber']
+      ss.hash_from_marc(@one)['hello'].should ==  ['Hello Bill Dueber']
     end
  
     it "builds a custom that can take two arguments" do
@@ -119,7 +119,7 @@ describe "DSL" do
         end
       end
 
-      ss.hash_from_marc(@one)['hello'].should.equal ['Hello 1 2 3 4 5']
+      ss.hash_from_marc(@one)['hello'].should ==  ['Hello 1 2 3 4 5']
     end
     
     it "works with multihead" do
@@ -131,8 +131,8 @@ describe "DSL" do
         end
       end
 
-      ss.hash_from_marc(@one)['a'].should.equal ['one']
-      ss.hash_from_marc(@one)['b'].should.equal ['two']
+      ss.hash_from_marc(@one)['a'].should ==  ['one']
+      ss.hash_from_marc(@one)['b'].should ==  ['two']
     end
   end
 
@@ -148,7 +148,7 @@ describe "DSL" do
           spec('001') 
         end
       end
-      ss.hash_from_marc(@one)['id'].should.equal ['afc99990058366']
+      ss.hash_from_marc(@one)['id'].should ==  ['afc99990058366']
     end
 
     it "should allow integer tags" do
@@ -157,7 +157,7 @@ describe "DSL" do
           spec(001) 
         end
       end
-      ss.hash_from_marc(@one)['id'].should.equal ['afc99990058366']
+      ss.hash_from_marc(@one)['id'].should ==  ['afc99990058366']
     end
 
     it "can get a single char" do
@@ -168,7 +168,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['c']
+      ss.hash_from_marc(@one)['tst'].should ==  ['c']
     end
 
     it "can get a range" do
@@ -179,7 +179,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['c9999']
+      ss.hash_from_marc(@one)['tst'].should ==  ['c9999']
     end
     
     it "allows multiple char/chars per control field" do
@@ -191,7 +191,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['c', 'c9999']
+      ss.hash_from_marc(@one)['tst'].should ==  ['c', 'c9999']
     end
       
 
@@ -209,7 +209,7 @@ describe "DSL" do
           spec(260) 
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['Medina, Texas, 1939.']
+      ss.hash_from_marc(@one)['tst'].should ==  ['Medina, Texas, 1939.']
     end
   
     it "can get a single subfield" do
@@ -220,7 +220,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['Medina, Texas,']
+      ss.hash_from_marc(@one)['tst'].should ==  ['Medina, Texas,']
     end
 
 
@@ -232,7 +232,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['The Texas ranger Sung by Beale D. Taylor.']
+      ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger Sung by Beale D. Taylor.']
     end
 
     it "can get multiple subfields as array" do
@@ -243,7 +243,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['The Texas ranger Sung by Beale D. Taylor.']
+      ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger Sung by Beale D. Taylor.']
     end 
   
     it "can get multiple different subfields from the same field" do
@@ -255,7 +255,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['The Texas ranger', 'Sung by Beale D. Taylor.']
+      ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger', 'Sung by Beale D. Taylor.']
     end  
   
     it "can handle multiple specs" do
@@ -269,7 +269,7 @@ describe "DSL" do
           }
         end
       end
-      ss.hash_from_marc(@one)['tst'].should.equal ['The Texas ranger', 'Sung by Beale D. Taylor.']
+      ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger', 'Sung by Beale D. Taylor.']
     end
   end
 
@@ -285,7 +285,7 @@ describe "DSL" do
         end
       end
       
-      ss.hash_from_marc(@one)['tst'].should.equal ['Lomax, John Avery, 1867-1948']
+      ss.hash_from_marc(@one)['tst'].should ==  ['Lomax, John Avery, 1867-1948']
     end
     
     it "works with default" do
@@ -299,7 +299,7 @@ describe "DSL" do
         end
       end
 
-      ss.hash_from_marc(@one)['tst'].should.equal ['Default value']
+      ss.hash_from_marc(@one)['tst'].should ==  ['Default value']
     end
   end
   
@@ -320,8 +320,8 @@ describe "DSL" do
 
       ss = MARCSpec::SpecSet.new
       ss.instance_eval(string)
-      ss.hash_from_marc(@one)['tst'].should.equal ['Default']
-      ss.hash_from_marc(@one)['id'].should.equal ['c9999']      
+      ss.hash_from_marc(@one)['tst'].should ==  ['Default']
+      ss.hash_from_marc(@one)['id'].should ==  ['c9999']      
     end
     
     it "works in compact form" do
@@ -338,8 +338,8 @@ describe "DSL" do
 
       ss = MARCSpec::SpecSet.new
       ss.instance_eval(string)
-      ss.hash_from_marc(@one)['tst'].should.equal ['Default']
-      ss.hash_from_marc(@one)['id'].should.equal ['c9999']      
+      ss.hash_from_marc(@one)['tst'].should ==  ['Default']
+      ss.hash_from_marc(@one)['id'].should ==  ['c9999']      
     end
     
     it "bails on a missing map" do
@@ -359,7 +359,7 @@ describe "DSL" do
       path = f.path
       f.close
       ss = MARCSpec::SpecSet.new
-      lambda{ss.buildSpecsFromDSLFile(path)}.should.raise SystemExit
+      lambda{ss.buildSpecsFromDSLFile(path)}.should raise_error(SystemExit)
       f.unlink
       
     end

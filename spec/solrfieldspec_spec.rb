@@ -26,7 +26,7 @@ describe "SolrFieldSpec" do
   it "works with a single fieldspec" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC
-    sfs.marc_values(@one).should.equal [@titleACValue]
+    sfs.marc_values(@one).should ==  [@titleACValue]
   end
   
   
@@ -34,14 +34,14 @@ describe "SolrFieldSpec" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC
     sfs << @twosixtyC
-    sfs.marc_values(@one).should.equal [@titleACValue, @twosixtyCValue]
+    sfs.marc_values(@one).should ==  [@titleACValue, @twosixtyCValue]
   end
 
   it "preserves order" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @twosixtyC
     sfs << @titleAC
-    sfs.marc_values(@one).should.equal [@twosixtyCValue, @titleACValue]
+    sfs.marc_values(@one).should ==  [@twosixtyCValue, @titleACValue]
   end
 
   
@@ -50,20 +50,20 @@ describe "SolrFieldSpec" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC
     sfs << @twosixtyC
-    sfs.marc_values(@one).should.equal [@titleACValue]
+    sfs.marc_values(@one).should ==  [@titleACValue]
   end
   
   it "returns nothing where there are no matches" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @nonmatchingSpec
-    sfs.marc_values(@one).should.equal []
+    sfs.marc_values(@one).should ==  []
   end
   
   it "works with a default" do
     @opts[:default] = @default
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @nonmatchingSpec
-    sfs.marc_values(@one).should.equal [@default]
+    sfs.marc_values(@one).should ==  [@default]
   end
 end
 
@@ -96,7 +96,7 @@ describe "Solr Field Specs and maps" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC
     sfs << @twosixtyC
-    sfs.marc_values(@one).should.equal [@mapValue]
+    sfs.marc_values(@one).should ==  [@mapValue]
   end
   
   it "works with a KV Map and just a map default" do
@@ -105,7 +105,7 @@ describe "Solr Field Specs and maps" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @titleAC # not in map, get noMapKeyDefault
     sfs << @twosixtyC # in map, get mapValue
-    sfs.marc_values(@one).should.equal [@noMapKeyDefault, @mapValue]
+    sfs.marc_values(@one).should ==  [@noMapKeyDefault, @mapValue]
   end
 
   it "works with a KV Map and returns default value correctly" do
@@ -114,7 +114,7 @@ describe "Solr Field Specs and maps" do
     @opts[:noMapKeyDefault] = @noMapKeyDefault
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @nonmatchingSpec
-    sfs.marc_values(@one).should.equal [@default]
+    sfs.marc_values(@one).should ==  [@default]
   end
     
   it "returns multiple values from a kv map when appropriate" do
@@ -122,7 +122,7 @@ describe "Solr Field Specs and maps" do
     @opts[:map] = @map
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @twosixtyC
-    sfs.marc_values(@one).sort.should.equal ['one', 'two']
+    sfs.marc_values(@one).sort.should ==  ['one', 'two']
   end
   
   it "flattens things out when getting multiple values from a kv map" do
@@ -132,7 +132,7 @@ describe "Solr Field Specs and maps" do
     sfs = MARCSpec::SolrFieldSpec.new(@opts)
     sfs << @twosixtyC
     sfs << @titleAC
-    sfs.marc_values(@one).sort.should.equal ['one', 'two', 'three', 'four'].sort
+    sfs.marc_values(@one).sort.should ==  ['one', 'two', 'three', 'four'].sort
   end
 
   
@@ -145,7 +145,7 @@ describe "Solr Field Specs and maps" do
     
     newsfs = MARCSpec::SolrFieldSpec.fromPPString(sfs.asPPString)
     newsfs.map = @map
-    sfs.should.equal newsfs
+    sfs.should ==  newsfs
   end
 end    
 
@@ -192,38 +192,38 @@ describe "CustomSolrSpec" do
   
   it "works with no args or map" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp)
-    css.marc_values(@one).should.equal [@one['245'].value.upcase]
+    css.marc_values(@one).should ==  [@one['245'].value.upcase]
   end
 
   it "accepts nil for no args" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :functionArgs=>nil)
-    css.marc_values(@one).should.equal [@one['245'].value.upcase]
+    css.marc_values(@one).should ==  [@one['245'].value.upcase]
   end
 
   
   it "uses a custom method with args but no map" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :module=>A::B, :functionSymbol=>:titleUp, :functionArgs=>[['a', 'c']])
-    css.marc_values(@one).should.equal [@titleACValue.upcase]
+    css.marc_values(@one).should ==  [@titleACValue.upcase]
   end
   
   it "works with a map" do
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :functionSymbol=>:titleUp, :functionArgs=>[['a', 'c']])
-    css.marc_values(@one).should.equal [@mapValue]
+    css.marc_values(@one).should ==  [@mapValue]
   end
   
   it "works with a map that has multiple return values" do 
     @map[@titleACValue.upcase] = ['two', 'one']
     css = MARCSpec::CustomSolrSpec.new(:solrField=>'solrField', :map=>@map, :module=>A::B, :functionSymbol=>:titleUp, :functionArgs=>[['a', 'c']])
-    css.marc_values(@one).should.equal ['two', 'one']
+    css.marc_values(@one).should ==  ['two', 'one']
   end
   
   it "disallows multispecs with maps or default values" do
     lambda{
       css = MARCSpec::CustomSolrSpec.new(:solrField=>['s1', 's2'], :module=>A::B, :functionSymbol=>:titleUp, :map=>@map)
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
     lambda{
       css = MARCSpec::CustomSolrSpec.new(:solrField=>['s1', 's2'], :module=>A::B, :functionSymbol=>:titleUp, :default=>"bill")
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
   end
   
 end
@@ -231,14 +231,14 @@ end
 describe "ConstantSolrSpec" do
   it "sets correct fields" do
     c = MARCSpec::ConstantSolrSpec.new(:solrField=>"test", :constantValue=>"value")
-    c.solrField.should.equal 'test'
-    c.constantValue.should.equal 'value'
+    c.solrField.should ==  'test'
+    c.constantValue.should ==  'value'
   end
   
   it "allows array of values" do 
     value = ['a', 'b', 'c']
     c = MARCSpec::ConstantSolrSpec.new(:solrField=>"test", :constantValue=>value)
-    c.constantValue.should.equal value
+    c.constantValue.should ==  value
   end
 
   bad = {
@@ -255,7 +255,7 @@ describe "ConstantSolrSpec" do
     opts = {:solrField=>'test'}
     opts[k] = v
     it "raises ArgumentError if given invalid option #{k}" do
-      lambda{c = MARCSpec::ConstantSolrSpec.new(opts)}.should.raise ArgumentError
+      lambda{c = MARCSpec::ConstantSolrSpec.new(opts)}.should raise_error(ArgumentError)
     end
   end
   
@@ -264,6 +264,6 @@ describe "ConstantSolrSpec" do
     s = StringIO.new
     s.puts(c.asPPString)
     d = MARCSpec::ConstantSolrSpec.fromPPString(s.string)
-    c.should.equal d
+    c.should ==  d
   end
 end

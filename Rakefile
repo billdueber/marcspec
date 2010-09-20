@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'rake'
+gem 'ci_reporter'
+require 'ci/reporter/rake/rspec'
 
 begin
   require 'jeweler'
@@ -10,9 +12,9 @@ begin
     gem.email = "bill@dueber.com"
     gem.homepage = "http://github.com/billdueber/marcspec"
     gem.authors = ["BillDueber"]
-    gem.add_development_dependency "bacon", ">= 0"
+    gem.add_development_dependency "rspec"
     gem.add_development_dependency "yard", ">= 0"
-
+    gem.add_development_dependency 'ci_reporter'
     gem.add_dependency 'marc4j4r', '>=0.9.0'
     gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.3.1'
     
@@ -24,12 +26,19 @@ rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-require 'rake/testtask'
-Rake::TestTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.verbose = true
+
+require 'spec/rake/spectask'
+desc "Run rspec specs"
+Spec::Rake::SpecTask.new('spec') do |t|
+  t.spec_files = FileList['spec/**/*_spec.rb']
 end
+
+desc "Run Rspec tests with CI output in spec/reports"
+Spec::Rake::SpecTask.new('cispec') do |t|
+  t.spec_files = FileList['spec/**/*_spec.rb']
+end
+
+
 
 begin
   require 'rcov/rcovtask'
@@ -40,12 +49,12 @@ begin
   end
 rescue LoadError
   task :rcov do
-    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
+    abort "RCov is not available. In order to run rcov, you must: jgem install rcov-java"
   end
 end
 
 task :spec => :check_dependencies
-
+task :cispec => :"ci:setup:rspec"
 task :default => :spec
 
 begin

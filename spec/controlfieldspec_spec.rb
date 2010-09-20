@@ -29,23 +29,23 @@ describe "ControlFieldSpec" do
   # 01234567890123 # index
   it "gets a single full value" do
     cfs = MARCSpec::ControlFieldSpec.new('001')
-    cfs.marc_values(@one).should.equal ["afc99990058366"]    
+    cfs.marc_values(@one).should == ["afc99990058366"]    
   end
   
   it "gets a single character" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 10 )
-    cfs.marc_values(@one).should.equal ['8']
+    cfs.marc_values(@one).should == ['8']
   end
   
   it "gets a range of characters" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 6..10 )
-    cfs.marc_values(@one).should.equal ['90058']
+    cfs.marc_values(@one).should == ['90058']
   end
   
   it "should round trip" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 6..10 )
     cfs2 = MARCSpec::ControlFieldSpec.fromPPString(cfs.asPPString)
-    cfs.should.equal cfs2
+    cfs.should == cfs2
   end    
 end
 

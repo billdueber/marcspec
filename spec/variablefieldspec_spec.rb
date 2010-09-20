@@ -26,39 +26,39 @@ describe "VariableFieldSpec" do
 
   it "Should get a whole field separated by spaces" do
     dfs = MARCSpec::VariableFieldSpec.new('260')
-    dfs.marc_values(@one).should.equal ["Medina, Texas, 1939."]
+    dfs.marc_values(@one).should ==  ["Medina, Texas, 1939."]
   end
 
   it "Should get just the $a" do
     dfs = MARCSpec::VariableFieldSpec.new('260', 'a')
-    dfs.marc_values(@one).should.equal ["Medina, Texas,"]
+    dfs.marc_values(@one).should ==  ["Medina, Texas,"]
   end
   
   it "should return separate values for repeated subfields if only one code is specified" do
     dfs = MARCSpec::VariableFieldSpec.new('651', 'z')
-    dfs.marc_values(@one).sort.should.equal ['Texas', 'United States of America.']
+    dfs.marc_values(@one).sort.should ==  ['Texas', 'United States of America.']
   end
   
-  it "Should get all fields via several equal routes" do
+  it "Should get all fields via several == routes" do
     a = MARCSpec::VariableFieldSpec.new('260').marc_values(@one)
     ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c']).marc_values(@one)
     ca =  MARCSpec::VariableFieldSpec.new('260', ['c', 'a']).marc_values(@one)
     ca2 = MARCSpec::VariableFieldSpec.new('260', 'ca').marc_values(@one)
     allrange = MARCSpec::VariableFieldSpec.new('260', 'a'..'z').marc_values(@one)
-    a.should.equal ac
-    ac.should.equal ca
-    ca.should.equal allrange
+    a.should ==  ac
+    ac.should ==  ca
+    ca.should ==  allrange
   end
   
   it "should get all three 700a's" do
     a = MARCSpec::VariableFieldSpec.new('700', 'a').marc_values(@one)
-    a.should.equal ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
+    a.should ==  ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
   end
   
   it "should round trip" do 
     ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c'])
     ac2 = MARCSpec::VariableFieldSpec.fromPPString(ac.asPPString)
-    ac.should.equal ac2
+    ac.should ==  ac2
   end
   
 end

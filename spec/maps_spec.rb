@@ -6,53 +6,53 @@ describe "KV Maps" do
   end
   
   it "knows its name" do
-    @kvmap.mapname.should.equal 'kvmap'
+    @kvmap.mapname.should ==  'kvmap'
   end
   
   it "gets simple value from a kv map" do
-    @kvmap['one'].should.equal '1'
+    @kvmap['one'].should ==  '1'
   end
   
   it "gets a list value from a kv map" do
-    @kvmap['two'].should.equal ['2', 'zwei']
+    @kvmap['two'].should ==  ['2', 'zwei']
   end
   
   it "gets nothing on nonmatches for kvmap" do
-    @kvmap['ddd'].should.equal nil
+    @kvmap['ddd'].should ==  nil
   end
 
   it "gets default if set for nonmatches with KVMap" do
-    @kvmap['ddd', 'default'].should.equal 'default'
+    @kvmap['ddd', 'default'].should ==  'default'
   end
 
   it "gets key if default is :passthrough for nonmatches with KVMap" do
-    @kvmap['ddd', :passthrough].should.equal 'ddd'
+    @kvmap['ddd', :passthrough].should ==  'ddd'
   end
 
   
   it "correctly uses default value" do
-    @kvmap['ddd', 'default'].should.equal 'default'
-    @kvmap['one', 'default'].should.equal '1'
+    @kvmap['ddd', 'default'].should ==  'default'
+    @kvmap['one', 'default'].should ==  '1'
   end
   
   it "should round-trip a kvmap" do
     s = @kvmap.asPPString
     newkvmap = MARCSpec::KVMap.fromPPString s
-    newkvmap.should.equal @kvmap
+    newkvmap.should ==  @kvmap
   end
   
   
   it "should read a kv solrmarc file" do
     map = MARCSpec::KVMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/country_map.properties"
-    map.mapname.should.equal 'country_map'
-    map["nl"].should.equal "New Caledonia"
+    map.mapname.should ==  'country_map'
+    map["nl"].should ==  "New Caledonia"
   end
   
   it "should correctly deal with solrmarc files with escaped chars (via \\)" do
     map = MARCSpec::KVMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/location_map.properties"
-    map['AAEL'].should.equal 'AAEL'
-    map['AAEL MICE'].should.equal 'AAEL MICE'
-    map['BUHR AAEL'].should.equal 'BUHR'
+    map['AAEL'].should ==  'AAEL'
+    map['AAEL MICE'].should ==  'AAEL MICE'
+    map['BUHR AAEL'].should ==  'BUHR'
   end
   
   
@@ -64,13 +64,13 @@ describe "KV Maps" do
     f.close
     map2 = MARCSpec::Map.fromFile(path)
     f.unlink
-    map.class.should.equal MARCSpec::KVMap    
-    map.should.equal map2
+    map.class.should ==  MARCSpec::KVMap    
+    map.should ==  map2
   end
   
   it "can name a map based on the filename when using fromFile(path)" do
     map = MARCSpec::Map.fromFile("#{DIR}/data/simplemap.rb")
-    map.mapname.should.equal 'simplemap'
+    map.mapname.should ==  'simplemap'
   end
 
 end
@@ -94,33 +94,33 @@ describe "MVMaps" do
   end
   
   it "knows its name" do
-    @mvmap.mapname.should.equal 'mvmap'
+    @mvmap.mapname.should ==  'mvmap'
   end
   
   it "gets nothing on nonmatches for mvmap" do
-    @mvmap['ddd'].should.equal nil
+    @mvmap['ddd'].should ==  nil
   end
   
   it "gets default if set for nonmatches with MVMap" do
-    @mvmap['ddd', 'default'].should.equal 'default'
+    @mvmap['ddd', 'default'].should ==  'default'
   end
   
 
   it "gets key if default is :passthrough for nonmatches with KVMap" do
-    @mvmap['ddd', :passthrough].should.equal 'ddd'
+    @mvmap['ddd', :passthrough].should ==  'ddd'
   end
 
   
   it "gets correct values from multivaluemap" do
-    @mvmap['bi'].should.equal ['Bill']
-    @mvmap['bill'].should.equal ['Bill']
-    @mvmap['mobi'].sort.should.equal ['Bill', 'Molly'].sort
-    @mvmap['Molly'].sort.should.equal ['Molly', 'Bill', 'One', 'Two'].sort
+    @mvmap['bi'].should ==  ['Bill']
+    @mvmap['bill'].should ==  ['Bill']
+    @mvmap['mobi'].sort.should ==  ['Bill', 'Molly'].sort
+    @mvmap['Molly'].sort.should ==  ['Molly', 'Bill', 'One', 'Two'].sort
   end
 
   it "correctly uses default value" do
-    @mvmap['bi', 'default'].should.equal ['Bill']
-    @mvmap['ddd', 'default'].should.equal 'default'
+    @mvmap['bi', 'default'].should ==  ['Bill']
+    @mvmap['ddd', 'default'].should ==  'default'
   end
   
   it "should round trip a multivaluemap without a Proc" do 
@@ -131,31 +131,31 @@ describe "MVMaps" do
     @mvmap.map = cleanmap
     s = @mvmap.asPPString
     newmvmap = MARCSpec::MultiValueMap.fromPPString s
-    newmvmap.should.equal @mvmap
+    newmvmap.should ==  @mvmap
   end
   
   it "can't round-trip a multivaluemap with a Proc" do
     s = @mvmap.asPPString
     newmvmap = MARCSpec::MultiValueMap.fromPPString s
-    newmvmap.should.not.equal @mvmap
+    newmvmap.should_not ==  @mvmap
   end
   
   
   it "can use a proc in a multivaluemap" do
-    @mvmap['Molly Dueber'].sort.should.equal ['Molly', 'Bill', 'Dueber', 'One', 'Two'].sort
+    @mvmap['Molly Dueber'].sort.should ==  ['Molly', 'Bill', 'Dueber', 'One', 'Two'].sort
   end
   
   it "can use a simple passthrough in a multivaluemap" do
      @mvmap = MARCSpec::MultiValueMap.new('mvmap', [[/.*/, Proc.new {|m| m[0]}]])
-     @mvmap['one'].should.equal ['one']
-     @mvmap['two'].should.equal ['two']
+     @mvmap['one'].should ==  ['one']
+     @mvmap['two'].should ==  ['two']
   end
 
   it "should read a pattern solrmarc file" do
     map = MARCSpec::MultiValueMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/library_map.properties"
-    map.mapname.should.equal 'library_map'
-    map['UMTRI Stuff'].should.equal ['Transportation Research Institute Library (UMTRI)']
-    map['HATCH DOCS'].should.equal ['Hatcher Graduate', 'Hatcher Graduate Documents Center']
+    map.mapname.should ==  'library_map'
+    map['UMTRI Stuff'].should ==  ['Transportation Research Institute Library (UMTRI)']
+    map['HATCH DOCS'].should ==  ['Hatcher Graduate', 'Hatcher Graduate Documents Center']
   end
 
   it "can dump/load a multivalue map via generic map interface" do
@@ -166,16 +166,16 @@ describe "MVMaps" do
     f.close
     map2 = MARCSpec::Map.fromFile(path)
     f.unlink
-    map.class.should.equal MARCSpec::MultiValueMap
-    map.should.equal map2
+    map.class.should ==  MARCSpec::MultiValueMap
+    map.should ==  map2
   end
 
   it "collapses ok" do
-    @mvmapCollapse['bill'].should.equal ['William']
-    @mvmapCollapse['william'].should.equal ['William']
-    @mvmapCollapse['bill dueber'].sort.should.equal ['William', 'Dueber'].sort
-    @mvmapCollapse['Will "duebes" Dueber'].sort.should.equal ['William', 'Dueber'].sort
-    @mvmapCollapse['notinthere'].should.equal nil
+    @mvmapCollapse['bill'].should ==  ['William']
+    @mvmapCollapse['william'].should ==  ['William']
+    @mvmapCollapse['bill dueber'].sort.should ==  ['William', 'Dueber'].sort
+    @mvmapCollapse['Will "duebes" Dueber'].sort.should ==  ['William', 'Dueber'].sort
+    @mvmapCollapse['notinthere'].should ==  nil
   end
     
   

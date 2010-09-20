@@ -29,29 +29,29 @@ describe "ControlFieldSpec" do
   # 01234567890123 # index
   it "gets a single full value" do
     cfs = MARCSpec::ControlFieldSpec.new('001')
-    cfs.marc_values(@one).should.equal ["afc99990058366"]    
+    cfs.marc_values(@one).should ==  ["afc99990058366"]    
   end
   
   it "gets a single character" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 10 )
-    cfs.marc_values(@one).should.equal ['8']
+    cfs.marc_values(@one).should ==  ['8']
   end
   
   it "gets a range of characters" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 6..10 )
-    cfs.marc_values(@one).should.equal ['90058']
+    cfs.marc_values(@one).should ==  ['90058']
   end
   
   it "should round trip" do
     cfs = MARCSpec::ControlFieldSpec.new('001', 6..10 )
     cfs2 = MARCSpec::ControlFieldSpec.fromPPString(cfs.asPPString)
-    cfs.should.equal cfs2
+    cfs.should ==  cfs2
   end    
   
   it "throws an error if you try to use a datafield tag" do
     lambda{
       cfs = MARCSpec::ControlFieldSpec.new('010', 6..10 )
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
   end
   
   it "accepts various forms for the range" do
@@ -62,22 +62,22 @@ describe "ControlFieldSpec" do
     # Range 4-7 is 9999
     cfs1.range = 4
     cfs2.range = 4..4
-    cfs1.marc_values(@one).should.equal ['9']
-    cfs2.marc_values(@one).should.equal ['9']
+    cfs1.marc_values(@one).should ==  ['9']
+    cfs2.marc_values(@one).should ==  ['9']
   end
   
   it "rejects bad ranges" do
     lambda{
       cfs = MARCSpec::ControlFieldSpec.new('010', -1)
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
 
     lambda{
       cfs = MARCSpec::ControlFieldSpec.new('010', -1..3)
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
     
     lambda{
       cfs = MARCSpec::ControlFieldSpec.new('010', [1,2,3])
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
   end
 end
 
@@ -90,17 +90,17 @@ describe "LeaderSpec" do
   it "must use LDR as the tag" do
     lambda{
       cfs = MARCSpec::LeaderSpec.new('008')
-    }.should.raise ArgumentError
+    }.should raise_error(ArgumentError)
   end
   
   it "Works with full leader" do
     cfs = MARCSpec::LeaderSpec.new('LDR')
-    cfs.marc_values(@one).should.equal @one.leader
+    cfs.marc_values(@one).should ==  @one.leader
   end
   
   it "Works with substring of leader" do
     cfs = MARCSpec::LeaderSpec.new('LDR', 3..5)
-    cfs.marc_values(@one).should.equal @one.leader[3..5]
+    cfs.marc_values(@one).should ==  @one.leader[3..5]
   end
 end
     
@@ -114,39 +114,39 @@ describe "VariableFieldSpec" do
 
   it "Should get a whole field separated by spaces" do
     dfs = MARCSpec::VariableFieldSpec.new('260')
-    dfs.marc_values(@one).should.equal ["Medina, Texas, 1939."]
+    dfs.marc_values(@one).should ==  ["Medina, Texas, 1939."]
   end
 
   it "Should get just the $a" do
     dfs = MARCSpec::VariableFieldSpec.new('260', 'a')
-    dfs.marc_values(@one).should.equal ["Medina, Texas,"]
+    dfs.marc_values(@one).should ==  ["Medina, Texas,"]
   end
   
   it "should return separate values for repeated subfields if only one code is specified" do
     dfs = MARCSpec::VariableFieldSpec.new('651', 'z')
-    dfs.marc_values(@one).sort.should.equal ['Texas', 'United States of America.']
+    dfs.marc_values(@one).sort.should ==  ['Texas', 'United States of America.']
   end
   
-  it "Should get all fields via several equal routes" do
+  it "Should get all fields via several == routes" do
     a = MARCSpec::VariableFieldSpec.new('260').marc_values(@one)
     ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c']).marc_values(@one)
     ca =  MARCSpec::VariableFieldSpec.new('260', ['c', 'a']).marc_values(@one)
     ca2 = MARCSpec::VariableFieldSpec.new('260', 'ca').marc_values(@one)
     allrange = MARCSpec::VariableFieldSpec.new('260', 'a'..'z').marc_values(@one)
-    a.should.equal ac
-    ac.should.equal ca
-    ca.should.equal allrange
+    a.should ==  ac
+    ac.should ==  ca
+    ca.should ==  allrange
   end
   
   it "should get all three 700a's" do
     a = MARCSpec::VariableFieldSpec.new('700', 'a').marc_values(@one)
-    a.should.equal ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
+    a.should ==  ["Lomax, John Avery, 1867-1948", "Lomax, Ruby T. (Ruby Terrill)", "Taylor, Beale D."]
   end
   
   it "should round trip" do 
     ac =  MARCSpec::VariableFieldSpec.new('260', ['a', 'c'])
     ac2 = MARCSpec::VariableFieldSpec.fromPPString(ac.asPPString)
-    ac.should.equal ac2
+    ac.should ==  ac2
   end
   
 end

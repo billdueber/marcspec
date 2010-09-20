@@ -25,6 +25,6 @@ describe "Cachespot" do
   
   it "should set a value and get it back" do
     @one.cachespot['one'] = 1
-    @one.cachespot['one'].should.equal 1
+    @one.cachespot['one'].should ==  1
   end
 end

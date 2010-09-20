@@ -69,22 +69,23 @@ describe "SpecSet Basics" do
   end
   
   it "should get all the specs" do
-    @ss.solrfieldspecs.size.should.equal 4
+    @ss.solrfieldspecs.size.should ==  4
   end
   
   it "gets the places field" do
-    @h['places'].sort.should.equal @places.sort
+    @h['places'].sort.should ==  @places.sort
   end
   
-  correct = {
-    'title' => @title,
-    'titleA' => @titleA,
-    'constantField' => ['A', 'B']
-  }
-  correct.each do |k,v|
-    it "gets correct value for #{k}" do
-      @h[k].should.equal v
-    end
+  it "gets title" do
+    @h['title'].should == @title
+  end
+  
+  it "gets title_a" do
+    @h['titleA'].should == @titleA
+  end
+  
+  it "gets constant" do
+    @h['constantField'].should == ['A', 'B']
   end
   
   it "allows customs that reference previous work" do
@@ -92,8 +93,8 @@ describe "SpecSet Basics" do
     ss = MARCSpec::SpecSet.new
     ss.buildSpecsFromList(@speclist)
     h = ss.hash_from_marc @one
-    h['title'].should.equal @title
-    h['titleSort'].should.equal @title.map{|a| a.gsub(/\p{Punct}/, ' ').gsub(/\s+/, ' ').strip.downcase}
+    h['title'].should ==  @title
+    h['titleSort'].should ==  @title.map{|a| a.gsub(/\p{Punct}/, ' ').gsub(/\s+/, ' ').strip.downcase}
   end
   
   it "should allow repeated solrFields" do
@@ -103,7 +104,7 @@ describe "SpecSet Basics" do
     ss = MARCSpec::SpecSet.new
     ss.buildSpecsFromList(@speclist)
     h = ss.hash_from_marc @one
-    h['titleA'].sort.should.equal expected.sort
+    h['titleA'].sort.should ==  expected.sort
   end
   
   it "should allow multi-headed custom fields" do
@@ -114,14 +115,14 @@ describe "SpecSet Basics" do
     ss = MARCSpec::SpecSet.new
     ss.buildSpecsFromList(@speclist)
     h = ss.hash_from_marc @one
-    h['one'].should.equal [1]
-    h['two'].should.equal [2]
-    h['letters'].should.equal ['a', 'b']
+    h['one'].should ==  [1]
+    h['two'].should ==  [2]
+    h['letters'].should ==  ['a', 'b']
   end
   
   it "bails if it can't find a map" do
     @speclist << {:solrField => 'tst', :mapname=>'nosuch', :specs => [['245']]}
-    lambda{@ss.buildSpecsFromList(@speclist)}.should.raise SystemExit 
+    lambda{@ss.buildSpecsFromList(@speclist)}.should raise_error(SystemExit )
   end
   
 end
@@ -159,7 +160,7 @@ describe "Specset Benchmarking" do
       h = @ss.hash_from_marc(r, true)
     end
     @ss.solrfieldspecs.each do |sfs|
-      @ss.benchmarks[sfs.solrField].real.should.be positive
+      @ss.benchmarks[sfs.solrField].real.should be > 0.0
     end
     
     # @ss.benchmarks.each do |k,v|
