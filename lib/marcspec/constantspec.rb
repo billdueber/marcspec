@@ -2,10 +2,11 @@ require 'marcspec/solrfieldspec'
 
 
 module MARCSpec
+  
+  # A ConstantSolrSpec always returns the same value(s) no matter what's in the record.
   class ConstantSolrSpec < SolrFieldSpec
     attr_accessor :constantValue
     
-    #attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :default, :arity
     
     def initialize opts = {}
       @solrField  = opts[:solrField]
@@ -20,14 +21,18 @@ module MARCSpec
       end
     end
     
+    # Return the constant value associated with this spec
     def marc_values r, doc = {}
       return @constantValue
     end
     
+    # Basic equality
     def == other
       return @constantValue == other.constantValue
     end
     
+    # Build up from a ruby hash
+    # @deprecated Use the DSL
     def self.fromHash h
       return self.new(h)
     end
@@ -36,6 +41,8 @@ module MARCSpec
       return "constant('#{@solrField}') do\n  value #{@constantValue.inspect}\nend"
     end
     
+    # Used to round-trip to/from hash syntax
+    # @deprecated Use the DSL
     def asPPString
       s = StringIO.new
       s.print "{\n :solrField=> "

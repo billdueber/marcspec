@@ -1,45 +1,66 @@
+1.5.2
+  * 
+1.5.1
+  * Fixed lots of DSL bugs
+  * Moved testing to RSpec in anticipation of using Hudson
+
 1.5.0 
   * Added DSL; making it the preferred way to operate. Totally deprecating the aray-of-hashes stuff. 
+
 1.1.1
   * Fixed bug with :noMapKeyDefault => :passthrough for MVMap
+
 1.1.0
   * Added support for Proc objects as the value in a MVMap
+
 1.0.0
   * Added constant specs (:constantValue=>'val' or :constantValue=>['array', 'of', 'values'])
   * Arbitrarily decided this is version 1.0
+
 0.9.0
   * Added ability to benchmark by calling ss.doc_from_marc(r, true) instead of just ss.doc_from_marc(r)
+
 0.8.1
   * Added some specs, squashed some bugs. In particular, make sure the Range passed to a ControlField
     makes sense (x..y, where x<=y and x > 0)
+
 0.8.0
   * Changed the syntax for a variable field from ['245', '*', '*', 'ab'] to just ['245', 'ab']. We'll worry
     about indicators when that bridge gets crossed.
+
 0.7.3
   * Squashed a bug where I forgot to deal with escaping in java .properties files. Now I'm just using 
     a real Java Properties object so I don't have to worry about it.
+
 0.7.2
   * Also change methodArgs to functionArgs
+
 0.7.1
   * Forgot to update this CHANGES file.     
+
 0.7.0
   * Change configuration for custom functions to use :functionSymbol instead of :methodSymbol. Because, you know, they're
     module functions, not class methods. 
   * Split out marcspec stuff into multiple files (leader/control/variable fields).
+
 0.6.0
   * Allow custom functions to return values for multiple solr fields at once; should help avoid duplication of work.
+
 0.5.0
   * Allow solr field names to repeat in a spec set. This allows you to cumulatively add to a solr field based on "regular" 
     and custom (or, say, two custom) specs.
+
 0.4.0
   * MAJOR BACKWARD-INCOMPATIBLE CHANGE!! The signature for custom routines is now def function(doc, record, my, args), where
   "doc" is a hashlike (usually a SolrDocument) that contains all the work that has happened up to this point. The idea is that you 
   can use previously-computed values to determine values for different fields. Use sparingly.
+
 0.3.0
   * Changed behavior with respect to repeated subfields. A spec such as '260 ac' returns the values of the 'a' and
   'c' subfields concatenated together. A request for '631 z' would, similarly, return the values *of all the subfield
   z's* concatenated together. I'm now treating this as a special case. If the request is for a single subfield code,
   multiple values are returned separate from each other.
   
+
 0.2.0
   * First public release

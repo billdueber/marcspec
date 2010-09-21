@@ -47,6 +47,8 @@ module MARCSpec
     # no key in the map that matches the value. 
     #
     # Note that the last four options don't make sense if multiple :solrFields are given, and are illegal in that case.
+    #
+    # Also note that using the DSL to produce these is easier from config file.
     
     def initialize(opts)
       @solrField  = opts[:solrField]
@@ -85,10 +87,14 @@ module MARCSpec
     end
     
     
+    # Produce one from the results of eval'ing a asPPString string
+    # @deprecated Use the DSL
+    
     def self.fromHash h
       return self.new(h)
     end
   
+    # Produce DSL code that will reproduce this object
     def asDSLString
       s = StringIO.new
       s.puts "custom('#{@solrField}') do"
@@ -118,6 +124,8 @@ module MARCSpec
       return s.string
     end
 
+    # Print out as a ruby hash.
+    # @deprecated Use the DSL
     def asPPString
       s = StringIO.new
       s.print "{\n :solrField=> "

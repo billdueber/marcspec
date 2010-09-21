@@ -26,19 +26,34 @@ module MARCSpec
   end
   
   
-
+  # A collection of the solr field specifications and maps necessary to turn a MARC record
+  # into a set of key=>value pairs suitable for sending to Solr
+  
   class SpecSet
     attr_accessor :tmaps, :solrfieldspecs, :benchmarks
     
+    # Generic new
     def initialize
       @tmaps = {}
       @solrfieldspecs = []
       @benchmarks = {}
     end
     
+    # Get the map object associated with the given name
+    # @param [String] name The name of the map you want
+    # @return [MARCSpec::Map, nil] Either the map or nil (if not found)
+    
     def map name
       return self.tmaps[name]
     end
+    
+    # Get all the *.rb files in a directory, assume they're maps, and create entries for
+    # them in self
+    #
+    # Simple wrapper around MARCSpec::Map#fromFile. Note that if a mapname is not found
+    # in the map structure, the name of the file (without the trailing '.rb') will be used.
+    #
+    # @param [String] dir The directory to look in. Not recursive.
     
     def loadMapsFromDir dir
       unless File.exist? dir
@@ -50,15 +65,26 @@ module MARCSpec
     end
     
   
-    
+    # Add a map to self, using its name (map#mapname) as a key
+    # @param [MARCSpec::Map] map the map to add.
     def add_map map
       self.tmaps[map.mapname] = map
     end
     
+    # Build up a specset from the configuration in the given DSL file
+    # Note that this assumes that the maps have already been loaded!!
+    #
+    # @param [String, IO] f The name of the file, or an open IO object
+    # @return [MARCSpec::SpecSet] the new object
     
-    def buildSpecsFromDSLFile file
-      f = File.open(file)
-      $LOG.fatal("Can't open file #{file}") unless f
+    
+    def buildSpecsFromDSLFile f
+      f = File.open(f) if f.is_a? String
+
+      unless f
+        $LOG.fatal("Can't open file #{file}") 
+        Process.exit
+      end
       self.instance_eval(f.read)
       self.check_and_fill_maps
     end
@@ -80,6 +106,8 @@ module MARCSpec
     end
       
     
+    # Build a specset from the result of eval'ing an old-style pp hash. 
+    # @deprecated Use the DSL
     
     def buildSpecsFromList speclist
       speclist.each do |spechash|
@@ -106,6 +134,10 @@ module MARCSpec
     end
       
     
+    # Add a spec, making sure there's a slot in the benchmarking stats to keep track of it
+    #
+    # @param [MARCSpec::SolrFieldSpec] solrfieldspec The spec to add
+
     def add_spec solrfieldspec
       self.solrfieldspecs << solrfieldspec
       @benchmarks[solrfieldspec.solrField.to_s] = Benchmark::Tms.new(0,0,0,0, 0, solrfieldspec.solrField)      
@@ -113,11 +145,23 @@ module MARCSpec
     
     alias_method :<<, :add_spec
 
+
+    # Iterate over each of the solr field specs
     def each
       @solrfieldspecs.each do |fs|
         yield fs
       end
     end
+    
+    # Fill a hashlike (either a hash or a SolrInputDocument) based on 
+    # the specs, maps, and passed-in record. 
+    #
+    # Result is the hashlike getting new data added to it. Nothing is returned; it's all
+    # side-effects.
+    #
+    # @param [MARC4J4R::Record] r The record
+    # @param [Hash, SolrInputDocument] hashlike The hash-like object that contains previously-generated content
+
     
     def fill_hashlike_from_marc r, hashlike
       @solrfieldspecs.each do |sfs|
@@ -131,6 +175,14 @@ module MARCSpec
         end
       end
     end
+    
+    # Same as #fill_hashlike_from_marc, but keeps track of how
+    # long each solr field takes (cumulative; it's added to every
+    # time you get data from a record). 
+    #
+    # @param [MARC4J4R::Record] r The record
+    # @param [Hash, SolrInputDocument] hashlike The hash-like object that contains previously-generated content
+    
 
     def fill_hashlike_from_marc_benchmark r, hashlike
       @solrfieldspecs.each do |sfs|
@@ -148,6 +200,14 @@ module MARCSpec
     end
 
 
+    # Get a new SolrInputDocument based on the record passed in.
+    # Statistics will optionally be kept, and can be accessed
+    # via the @benchmarks intance varible later on.
+    #
+    # @param [MARC4J4R::Record] r The record
+    # @param [Boolean] timeit Whether to keep cumulative benchmarking statistics or not
+    # @return [SolrInputDocument] Thew new, filled SolrInputDocument    
+
     def doc_from_marc r, timeit = false
       doc = SolrInputDocument.new
       if timeit
@@ -157,6 +217,13 @@ module MARCSpec
       end
       return doc
     end      
+    
+    # Exactly the same as #doc_from_marc, but the return object is a 
+    # subclass of Hash
+    #
+    # @param [MARC4J4R::Record] r The record
+    # @param [Boolean] timeit Whether to keep cumulative benchmarking statistics or not
+    # @return [MockSolrDoc] Thew new, filled Hash    
     
     def hash_from_marc r, timeit = false
       h = MARCSpec::MockSolrDoc.new

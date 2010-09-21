@@ -199,10 +199,10 @@ describe "DSL" do
 
 
   describe "variable fields DSL" do
-    # before do 
-    #   @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
-    # end
-  
+    before do 
+       @one = MARC4J4R::Reader.new("#{DIR}/data/one.dat").first
+     end
+   
     it "can get a whole variable field" do
       ss = MARCSpec.build do
         field("tst") do

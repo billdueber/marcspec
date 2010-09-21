@@ -33,7 +33,8 @@ module MARCSpec
               (self.range == other.range))
     end
     
-    
+    # Set the range of characters to use (nil for all)
+    #
     # Always force a real range, since in Ruby 1.9 a string subscript with a single fixnum
     # will return the character code of that character (e.g., "Bill"[0] => 66, wherease 
     # "Bill"[0..0] gives the expected 'B'
@@ -76,10 +77,14 @@ module MARCSpec
       end
     end
     
+    # Print it out has a ruby hash
+    # @deprecated Use the DSL
+  
     def pretty_print pp
       pp.pp eval(self.asPPString)
     end
     
+    # Print out as a DSL segment
     def asDSLString
       if (@range)
         return "spec('#{@tag}') {chars #{@range}}"
@@ -87,6 +92,9 @@ module MARCSpec
         return "spec('#{@tag}')"
       end
     end
+    
+    # Print out as a ruby hash.
+    # @deprecated Use the DSL
     
     def asPPString
       s = StringIO.new
@@ -97,6 +105,9 @@ module MARCSpec
       end
       return s.string
     end
+    
+    # Recreate from an asPPString call
+    # @deprecated Use the DSL
     
     def self.fromPPString str
       a = eval(str)

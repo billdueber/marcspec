@@ -17,7 +17,7 @@ module MARCSpec
       sfs = SolrFieldSpec.new(:solrField=>name)
       sfs.instance_eval(&blk)
       self << sfs
-      return sfsmb
+      return sfs
     end
     
     # Create a constant field
