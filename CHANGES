@@ -1,5 +1,7 @@
 1.5.2
-  * 
+  * Added more docs
+  * Put in actual @deprecated strings in YARD docs
+  
 1.5.1
   * Fixed lots of DSL bugs
   * Moved testing to RSpec in anticipation of using Hudson
