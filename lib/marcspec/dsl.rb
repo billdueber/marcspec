@@ -17,7 +17,7 @@ module MARCSpec
       sfs = SolrFieldSpec.new(:solrField=>name)
       sfs.instance_eval(&blk)
       self << sfs
-      return sfs
+      return sfsmb
     end
     
     # Create a constant field
@@ -50,7 +50,9 @@ module MARCSpec
       end
       
       marcfieldspec = nil
-      if MARC4J4R::ControlField.control_tag? tag
+      if tag == 'LDR'
+        marcfieldspec = MARCSpec::LeaderSpec.new('LDR')
+      elsif MARC4J4R::ControlField.control_tag? tag
         marcfieldspec = MARCSpec::ControlFieldSpec.new(tag)
       else
         marcfieldspec = MARCSpec::VariableFieldSpec.new(tag)
