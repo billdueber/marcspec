@@ -12,12 +12,11 @@ module MARCSpec
   class Map
     attr_accessor :mapname, :map
     
-    # Create a new map. The passed map is either
-    # a standard hash or a list of duples
+    # Create a new map. The passed map is either a standard hash (KVMap) or a list of duples
+    # (for a MultiValueMap)
     #
     # @param [String] mapname The name of this map; can be used to find it later on.
-    # @param [Hash, Array<2-value-arrays>] map Either a normal key-value hash (for a KV Map) or an
-    # array of duples (2-value arrays) for a MultiValueMap.
+    # @param [Hash, Array] map Either a normal key-value hash (for a KV Map) or an array of duples (2-value arrays) for a MultiValueMap.
     def initialize(mapname, map)
       @mapname = mapname
       @map = map

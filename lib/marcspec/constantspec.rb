@@ -22,6 +22,10 @@ module MARCSpec
     end
     
     # Return the constant value associated with this spec
+    # @param [MARC4J4R::Record] r The record. IGNORED. It's a constant ;-)
+    # @param [Hash, SolrInputDocument] doc The hash-like object that contains previously-generated content. IGNORED
+    # @return [String, Array] The constant value(s) associated with this object.
+    
     def marc_values r, doc = {}
       return @constantValue
     end

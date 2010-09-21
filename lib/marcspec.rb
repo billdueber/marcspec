@@ -13,11 +13,14 @@ require "marcspec/specset"
 require "marcspec/marcfieldspec"
 require "marcspec/dsl"
 
-# Build up a little module to include in MARC4J4R::Record that
-# gives us a way to cache computed values within the record itself
-# It's just a hash.
-
 module CacheSpot
+  # Build up a little module to include in MARC4J4R::Record that
+  # gives us a way to cache computed values within the record itself
+  # It's just a hash.
+  #
+  # Pretty sure this belongs somewhere else; not sure where.
+  #
+  # @return [Hash] the cachespot hash
   def cachespot
     @_cachespot ||= {}
     return @_cachespot
