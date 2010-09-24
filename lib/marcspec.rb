@@ -1,8 +1,10 @@
 require 'logger'
 require 'marc4j4r'
 
-$LOG = Logger.new(STDOUT)
-$LOG.level = Logger::WARN
+unless $LOG
+  $LOG Logger.new(STDOUT)
+  $LOG.level = Logger::WARN
+end
 
 require "marcspec/customspec"
 require "marcspec/solrfieldspec"
