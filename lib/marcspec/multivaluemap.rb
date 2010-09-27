@@ -91,7 +91,7 @@ module MARCSpec
         prop.load(f.to_inputstream)
         prop.each do |patstring,kv|
           unless patstring =~ /^pattern/ and kv =~ /.+=>.+/
-            $LOG.warn "MultiValueMap import skipping weird line in #{filename}\n  #{l}"
+            log.warn "MultiValueMap import skipping weird line in #{filename}\n  #{l}"
             next
           end
           match = /^\s*(.+?)\s*=>\s*(.+?)\s*$/.match(kv)

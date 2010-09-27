@@ -9,11 +9,11 @@ module MARCSpec
   
   # Re-open SpecSet to add the necessary methods
   
-  class SpecSet
+  class SpecSet    
     
     # create a normal field
     def field(name, &blk)
-      $LOG.debug "Creating regular field #{name}"
+      log.debug "Creating regular field #{name}"
       sfs = SolrFieldSpec.new(:solrField=>name)
       sfs.instance_eval(&blk)
       self << sfs
@@ -22,7 +22,7 @@ module MARCSpec
     
     # Create a constant field
     def constant(name, &blk)
-      $LOG.debug "Creating constant field #{name}"
+      log.debug "Creating constant field #{name}"
       
       constant = ConstantSolrSpec.new(:solrField=>name)
       constant.instance_eval(&blk)
@@ -31,7 +31,7 @@ module MARCSpec
     end
     
     def custom(name, &blk)
-      $LOG.debug "Creating custom field #{name}"
+      log.debug "Creating custom field #{name}"
       custom = CustomSolrSpec.new(:solrField=>name)
       custom.instance_eval(&blk)
       

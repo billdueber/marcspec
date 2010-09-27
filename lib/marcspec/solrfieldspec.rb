@@ -8,6 +8,8 @@ module MARCSpec
   # from a MARC record.
   
   class SolrFieldSpec
+    include Logback::Simple
+    
     attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :defaultValue,  :_mapname
     attr_reader :arity
 

@@ -9,6 +9,5 @@ require 'marcspec'
 
 DIR = File.dirname(__FILE__)
 
-# Unset logger
-
-$LOG.level = Logger::UNKNOWN
+Logback::Simple.loglevel = :debug
+Logback::Simple.startConsoleLogger

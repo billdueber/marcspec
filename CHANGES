@@ -1,3 +1,6 @@
+1.5.3
+  * Changed to use Logback::Simple
+  
 1.5.2
   * Added more docs
   * Put in actual @deprecated strings in YARD docs

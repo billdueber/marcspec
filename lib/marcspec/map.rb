@@ -10,6 +10,8 @@ module MARCSpec
   # NOTE: THIS IS AN ABSTRACT SUPERCLASS. DO NOT INSTANTIATE IT DIRECTLY
   
   class Map
+    include Logback::Simple
+    
     attr_accessor :mapname, :map
     
     # Create a new map. The passed map is either a standard hash (KVMap) or a list of duples
@@ -33,14 +35,14 @@ module MARCSpec
       begin
         str = File.open(filename).read
       rescue Exception => e
-        $LOG.error "Problem opening #{filename}: #{e.message}"
+        log.fatal "Problem opening #{filename}: #{e.message}"
         raise e
       end
       
       begin 
         rawmap = eval(str)
       rescue Exception => e
-        $LOG.error "Problem evaluating (with 'eval') file #{filename}: #{e.message}"
+        log.fatal "Problem evaluating (with 'eval') file #{filename}: #{e.message}"
         raise e
       end
       
@@ -57,7 +59,7 @@ module MARCSpec
       when :multi
         return MultiValueMap.new(rawmap[:mapname], rawmap[:map])
       else
-        $LOG.error "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
+        log.fatal "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
         raise ArgumentError, "File #{filename} doesn't evaluate to a valid map"
       end
       

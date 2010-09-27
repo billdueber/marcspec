@@ -17,6 +17,8 @@ module MARCSpec
   # substrings are specified.
   
   class ControlFieldSpec
+    include Logback::Simple
+    
     attr_accessor :tag, :range, :rangehistory
     
     def initialize (tag, range=nil)

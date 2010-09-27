@@ -30,6 +30,8 @@ module MARCSpec
   # into a set of key=>value pairs suitable for sending to Solr
   
   class SpecSet
+    include Logback::Simple
+    
     attr_accessor :tmaps, :solrfieldspecs, :benchmarks
     
     # Generic new
@@ -82,7 +84,7 @@ module MARCSpec
       f = File.open(f) if f.is_a? String
 
       unless f
-        $LOG.fatal("Can't open file #{file}") 
+        log.fatal("Can't open file #{file}") 
         Process.exit
       end
       self.instance_eval(f.read)
@@ -94,11 +96,10 @@ module MARCSpec
         if sfs._mapname
           map = self.map(sfs._mapname)
           if map
-            $LOG.debug "  Found map #{map.mapname} for solr field #{sfs.solrField}"
+            log.debug "  Found map #{map.mapname} for solr field #{sfs.solrField}"
             sfs.map = map
           else
-            $LOG.error "  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
-            STDERR.puts "FATAL  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
+            log.fatal "  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
             Process.exit
           end
         end
@@ -121,15 +122,15 @@ module MARCSpec
         if spechash[:mapname]
           map = self.map(spechash[:mapname])
           unless map
-            $LOG.error "  Cannot find map #{spechash[:mapname]} for field #{spechash[:solrField]}"
+            log.fatal "Cannot find map #{spechash[:mapname]} for field #{spechash[:solrField]}"
             Process.exit
           else
-            $LOG.debug "  Found map #{spechash[:mapname]} for field #{spechash[:solrField]}"
+            log.debug "  Found map #{spechash[:mapname]} for field #{spechash[:solrField]}"
             solrspec.map = map
           end
         end
         self.add_spec solrspec
-        $LOG.debug "Added spec #{solrspec.solrField}"
+        log.debug "Added spec #{solrspec.solrField}"
       end
     end
       

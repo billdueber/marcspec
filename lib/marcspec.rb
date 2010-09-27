@@ -1,10 +1,7 @@
-require 'logger'
 require 'marc4j4r'
+require "logback-simple"
 
-unless $LOG
-  $LOG Logger.new(STDOUT)
-  $LOG.level = Logger::WARN
-end
+
 
 require "marcspec/customspec"
 require "marcspec/solrfieldspec"
