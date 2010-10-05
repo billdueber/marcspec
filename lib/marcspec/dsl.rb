@@ -45,17 +45,30 @@ module MARCSpec
   
   class SolrFieldSpec
     def spec(tag, &blk)
+      
+      subs = nil
+      if tag =~ /^(...)(.+)$/
+        tag = $1
+        subs = $2
+      end
+      
       if tag.to_i == tag
         tag = '%03d' % tag
       end
       
       marcfieldspec = nil
+      
       if tag == 'LDR'
         marcfieldspec = MARCSpec::LeaderSpec.new('LDR')
       elsif MARC4J4R::ControlField.control_tag? tag
         marcfieldspec = MARCSpec::ControlFieldSpec.new(tag)
       else
         marcfieldspec = MARCSpec::VariableFieldSpec.new(tag)
+      end
+      
+      # Did we get subs? If so, add them now.
+      if subs
+        marcfieldspec.codes = subs
       end
       
       marcfieldspec.instance_eval(&blk) if block_given?

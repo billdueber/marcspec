@@ -271,6 +271,28 @@ describe "DSL" do
       end
       ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger', 'Sung by Beale D. Taylor.']
     end
+    
+    it "can get tag/subs in the spec string" do
+      ss = MARCSpec.build do
+        field("tst") do
+          spec('245ac')
+        end
+      end
+      ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger Sung by Beale D. Taylor.']
+    end
+
+    it "can get tag/subs in the spec string AND with a 'sub'" do
+      ss = MARCSpec.build do
+        field("tst") do
+          spec('245a') {
+            sub 'c'
+          }
+        end
+      end
+      ss.hash_from_marc(@one)['tst'].should ==  ['The Texas ranger', 'Sung by Beale D. Taylor.']
+    end
+
+    
   end
 
   describe "SolrFieldSpec modifiers DSL" do

@@ -9,5 +9,5 @@ require 'marcspec'
 
 DIR = File.dirname(__FILE__)
 
-Logback::Simple.loglevel = :debug
+Logback::Simple.loglevel = :warn
 Logback::Simple.startConsoleLogger
