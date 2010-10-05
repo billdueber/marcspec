@@ -91,7 +91,8 @@ module MARCSpec
     def asDSLString
       subs = @codes.join('')
       if subs.size > 0
-        return "spec('#{@tag}') {subs '#{subs}'}"
+        # return "spec('#{@tag}') {subs '#{subs}'}"
+        return "spec('#{tag}#{subs}')"
       else
         return "spec('#{@tag}')"
       end
