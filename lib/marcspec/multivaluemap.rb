@@ -24,12 +24,11 @@ module MARCSpec
     
     def initialize *args
       super(*args)
-      self.optimize
+      self.optimize if @map and @mapname
     end
     
     def map= map
       @map = map
-      self.optimize
     end
     
     
@@ -98,7 +97,10 @@ module MARCSpec
           kvlist << [Regexp.new(match[1]), match[2]]
         end
       end        
-      return self.new(mapname, kvlist)
+      rv = self.new(nil,nil) # empty; avoid the optimize
+      rv.mapname = mapname
+      rv.map = kvlist
+      return rv
     end
         
     # Produce a string suitable for pretty-printing. Unfortunately, we need to just plain
