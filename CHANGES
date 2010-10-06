@@ -1,6 +1,7 @@
+1.6.2
+  * When declaring a function using the DSL, make sure it is defined in the given module
 1.6.1
   * Change VariableField#asDSLString to reflect compact declaration of spec with subs
-  
 1.6.0
   * Allow specs like spec('245ac'), with or without a block as well.
   

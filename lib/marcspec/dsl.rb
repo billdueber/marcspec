@@ -138,6 +138,17 @@ module MARCSpec
     end
     
     def mod(constant)
+      # Is the module loaded?
+      
+      unless defined? constant
+        raise ArgumentError, "Module #{constant} unknown; do you need to make sure it gets loaded?"
+      end
+      
+      # Check to see if the functionSymbol exists
+      unless constant.singleton_methods.include? self.functionSymbol.to_s
+        raise ArgumentError, "Function #{self.functionSymbol} not defined in module #{constant}"
+      end
+      
       self.module = constant
     end
     
