@@ -35,7 +35,7 @@ module MARCSpec
       begin
         str = File.open(filename).read
       rescue Exception => e
-        log.fatal "Problem opening #{filename}: #{e.message}"
+        Logback::Simple::Logger.fatal "Problem opening #{filename}: #{e.message}"
         raise e
       end
       
