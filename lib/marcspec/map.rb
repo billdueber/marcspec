@@ -42,7 +42,7 @@ module MARCSpec
       begin 
         rawmap = eval(str)
       rescue Exception => e
-        log.fatal "Problem evaluating (with 'eval') file #{filename}: #{e.message}"
+        Logback::Simple::Logger.fatal "Problem evaluating (with 'eval') file #{filename}: #{e.message}"
         raise e
       end
       
@@ -59,7 +59,7 @@ module MARCSpec
       when :multi
         return MultiValueMap.new(rawmap[:mapname], rawmap[:map])
       else
-        log.fatal "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
+        Logback::Simple::Logger.fatal "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
         raise ArgumentError, "File #{filename} doesn't evaluate to a valid map"
       end
       

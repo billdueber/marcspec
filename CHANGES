@@ -1,3 +1,6 @@
+1.6.3
+  * Fixed bad calls to logback::simple "log" object in class methods, where it wasn't available
+  
 1.6.2
   * When declaring a function using the DSL, make sure it is defined in the given module
 1.6.1
