@@ -15,9 +15,9 @@ begin
     gem.add_development_dependency "rspec"
     gem.add_development_dependency "yard", ">= 0"
     gem.add_development_dependency 'ci_reporter'
-    gem.add_dependency 'marc4j4r', '>=1.1.0'
-    gem.add_dependency 'logback-simple'
-    gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.5.0'
+    gem.add_dependency 'marc4j4r', '>=1.2.0'
+    gem.add_dependency 'logback-simple', '>=0.0.2'
+    gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.5.3'
     
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

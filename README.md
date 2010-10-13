@@ -5,7 +5,7 @@ a data field (my use case specifically is solr) in terms of sets of MARC fields 
 
 It currently requires the use of `marc4j4r` and hence JRuby, but I'm going to work on making a compatibility layer with [ruby-marc](http://marc.rubyforge.org/) now that the 0.4 version is out.
 
-== Usage
+## Usage
 
 ```ruby
 require 'rubygems'
