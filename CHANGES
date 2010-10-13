@@ -1,3 +1,6 @@
+1.6.4  
+  * Update gem requirements
+  
 1.6.3
   * Fixed bad calls to logback::simple "log" object in class methods, where it wasn't available
   
