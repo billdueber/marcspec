@@ -160,6 +160,7 @@ describe "MVMaps" do
 
   it "can dump/load a multivalue map via generic map interface" do
     map = MARCSpec::MultiValueMap.from_solrmarc_file "#{DIR}/data/umich/translation_maps/library_map.properties"
+    map.optimize
     f = Tempfile.new('mvmap')
     f.puts map.asPPString
     path = f.path

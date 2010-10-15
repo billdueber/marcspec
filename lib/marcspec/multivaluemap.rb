@@ -54,6 +54,7 @@ module MARCSpec
     def [] key, default=nil
       rv = []
       
+      self.optimize unless @super_regexp
       if @super_regexp.match key # do *any* of them match?
         @map.each do |pv|
           if pv[1].is_a? Proc
