@@ -1,6 +1,4 @@
 require 'marc4j4r'
-require "logback-simple"
-
 
 
 require "marcspec/customspec"

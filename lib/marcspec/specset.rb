@@ -1,6 +1,7 @@
 require 'jruby_streaming_update_solr_server'
 require 'marc4j4r'
 require 'benchmark'
+require 'jlogger'
     
 
 module MARCSpec
@@ -30,7 +31,7 @@ module MARCSpec
   # into a set of key=>value pairs suitable for sending to Solr
   
   class SpecSet
-    include Logback::Simple
+    include JLogger::Simple
     
     attr_accessor :tmaps, :solrfieldspecs, :benchmarks
     

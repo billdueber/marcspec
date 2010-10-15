@@ -16,7 +16,7 @@ begin
     gem.add_development_dependency "yard", ">= 0"
     gem.add_development_dependency 'ci_reporter'
     gem.add_dependency 'marc4j4r', '>=1.2.0'
-    gem.add_dependency 'logback-simple', '>=0.0.2'
+    gem.add_dependency 'jlogger', '>=0.0.3'
     gem.add_dependency 'jruby_streaming_update_solr_server', '>=0.5.3'
     
     

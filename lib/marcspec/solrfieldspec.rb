@@ -1,5 +1,6 @@
 require 'stringio'
 require 'marc4j4r/controlfield'
+require 'jlogger'
 
 module MARCSpec
   
@@ -8,7 +9,7 @@ module MARCSpec
   # from a MARC record.
   
   class SolrFieldSpec
-    include Logback::Simple
+    include JLogger::Simple
     
     attr_accessor :solrField, :first, :map, :noMapKeyDefault, :marcfieldspecs, :defaultValue,  :_mapname
     attr_reader :arity

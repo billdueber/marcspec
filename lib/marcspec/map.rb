@@ -1,3 +1,5 @@
+require 'jlogger'
+
 module MARCSpec
   
   # A Map is just a named lookup table. The access
@@ -10,7 +12,7 @@ module MARCSpec
   # NOTE: THIS IS AN ABSTRACT SUPERCLASS. DO NOT INSTANTIATE IT DIRECTLY
   
   class Map
-    include Logback::Simple
+    include JLogger::Simple
     
     attr_accessor :mapname, :map
     
@@ -35,14 +37,14 @@ module MARCSpec
       begin
         str = File.open(filename).read
       rescue Exception => e
-        Logback::Simple::Logger.fatal "Problem opening #{filename}: #{e.message}"
+         "Problem opening #{filename}: #{e}"
         raise e
       end
       
       begin 
         rawmap = eval(str)
       rescue Exception => e
-        Logback::Simple::Logger.fatal "Problem evaluating (with 'eval') file #{filename}: #{e.message}"
+        log.error "Problem evaluating (with 'eval') file #{filename}: #{e}"
         raise e
       end
       
@@ -59,7 +61,7 @@ module MARCSpec
       when :multi
         return MultiValueMap.new(rawmap[:mapname], rawmap[:map])
       else
-        Logback::Simple::Logger.fatal "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
+        log.fatal "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
         raise ArgumentError, "File #{filename} doesn't evaluate to a valid map"
       end
       

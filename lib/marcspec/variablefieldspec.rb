@@ -1,5 +1,6 @@
-require 'set'
 require 'pp'
+require 'jlogger'
+
 module MARCSpec
   # A VariableFieldSpec has a tag (three chars) and a set of codes. Its #marc_values(r) method will return
   # all the values for the subfields for the given codes joined by the optional joiner (space by default)
@@ -14,7 +15,7 @@ module MARCSpec
   # vfs =  MARCSpec::VariableFieldSpec.new('245', 'a'..'b')
   
   class VariableFieldSpec
-    include Logback::Simple
+    include JLogger::Simple
     
     attr_accessor :tag, :codes, :joiner, :ind1, :ind2, :codehistory
 

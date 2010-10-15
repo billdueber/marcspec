@@ -1,6 +1,8 @@
 require 'marc4j4r'
 require 'set'
 require 'pp'
+require 'jlogger'
+
 module MARCSpec
   # A ControlFieldSpec takes a control tag (generally 001..009) and an optional zero-based range
   # When called with marc_values(record), it returns either the complete value of all
@@ -17,7 +19,7 @@ module MARCSpec
   # substrings are specified.
   
   class ControlFieldSpec
-    include Logback::Simple
+    include JLogger::Simple
     
     attr_accessor :tag, :range, :rangehistory
     
