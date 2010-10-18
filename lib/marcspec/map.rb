@@ -61,7 +61,7 @@ module MARCSpec
       when :multi
         return MultiValueMap.new(rawmap[:mapname], rawmap[:map])
       else
-        log.fatal "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
+        log.error "Map file #{filename} doesn't seem to be either a KV map or a MuliValueMap according to :maptype (#{rawmap[:maptype]})"
         raise ArgumentError, "File #{filename} doesn't evaluate to a valid map"
       end
       
