@@ -1,5 +1,6 @@
 1.6.6
   * Remove references to FATAL errors, which logback (nee jlogger) doesn't support
+  * Exit with code 1 (not zero) when things are, in fact, fatal (using Process.abort)
   
 1.6.5
   * Change to use jlogger
