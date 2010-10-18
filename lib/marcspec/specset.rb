@@ -85,8 +85,8 @@ module MARCSpec
       f = File.open(f) if f.is_a? String
 
       unless f
-        log.error("Can't open file #{file}") 
-        Process.exit
+        log.error("Can't open file #{file}; unable to configure") 
+        Process.exit(1)
       end
       self.instance_eval(f.read)
       self.check_and_fill_maps
@@ -101,7 +101,7 @@ module MARCSpec
             sfs.map = map
           else
             log.error "  Cannot find map #{sfs._mapname} for solr field #{sfs.solrField}"
-            Process.exit
+            Process.exit(1)
           end
         end
       end
@@ -124,7 +124,7 @@ module MARCSpec
           map = self.map(spechash[:mapname])
           unless map
             log.error "Cannot find map #{spechash[:mapname]} for field #{spechash[:solrField]}"
-            Process.exit
+            Process.exit(1)
           else
             log.debug "  Found map #{spechash[:mapname]} for field #{spechash[:solrField]}"
             solrspec.map = map
