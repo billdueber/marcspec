@@ -1,0 +1,48 @@
+A solrSpec has some basic attributes:
+- the solr field name
+- a firstOnly flag
+- a (possibly empty) set of transformers (marcfieldspecs, custom functions, maps, transformers)
+- a (default 'nil') default value
+
+So...what's a transformer?
+
+- a marcfieldspec -- marc('245') 
+- an adder function -- add(module, :function, *args) => function(doc,r,*args)
+- a map  -- map('mapname) { noMapKeyDefault('blah'); passthrough :nomatch/:always/:never/false }
+- a transform -- transform(module, :function, *args) => function(curVals)
+
+These are applied in the order they're defined.
+
+The maps also need to be pulled out into their own setup.
+
+MAPS
+  DefaultableMap -- an interface, defines #[key, default]; returns either the matched value or default
+    ManyToManyMap < DefaultableMap -- many to many map (with default). Returns an array, always
+
+MARCSpec
+  Adder [option: firstOnly]
+    MARCField [options: char(s), sub(s)]
+      controlField  # marc('008') {chars 11..18}
+      variableField # marc('245ab')
+      leader        # marc('LDR') {char 3}
+    Constant        # constant("Bill Dueber") or add("Bill", "Dueber")
+    Custom          # custom(module, :function, *args)
+    Default         # default "value"  # add the value iff @data is empty
+  Transformer
+    DefaultableMap [options: default, passthrough] # map(mapname)
+      ManyToManyMap # map(mapname) 
+    Transform       # transform(module, :function, *args)
+    Apply           # apply(:enumerableMethod, *args)
+  ControlFlow
+    Bail            # bail(module, :function, *args)
+
+
+
+module A                             
+  def self.builtin arr, meth, *args    
+    meth = [meth] unless meth.is_a? Array
+    meth.each do |m|                     
+      arr.map! {|item| item.send(m, *args)}
+    end
+  end
+end
