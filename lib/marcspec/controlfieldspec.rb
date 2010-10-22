@@ -18,7 +18,7 @@ module MARCSpec
   # Note that the use of the zero-based range in this manner conforms to the way MARC 
   # substrings are specified.
   
-  class ControlFieldSpec
+  class ControlFieldSpec < MARCFieldSpec
     include JLogger::Simple
     
     attr_accessor :tag, :range, :rangehistory

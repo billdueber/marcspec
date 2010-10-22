@@ -14,7 +14,7 @@ module MARCSpec
   # vfs =  MARCSpec::VariableFieldSpec.new('245', ['a', 'b'])
   # vfs =  MARCSpec::VariableFieldSpec.new('245', 'a'..'b')
   
-  class VariableFieldSpec
+  class VariableFieldSpec  < MARCFieldSpec
     include JLogger::Simple
     
     attr_accessor :tag, :codes, :joiner, :ind1, :ind2, :codehistory
