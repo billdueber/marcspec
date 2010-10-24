@@ -1,43 +1,44 @@
-A solrSpec has some basic attributes:
-- the solr field name
-- a firstOnly flag
-- a (possibly empty) set of transformers (marcfieldspecs, custom functions, maps, transformers)
-- a (default 'nil') default value
+# A solrSpec has some basic attributes:
+# - the solr field name
+# - a firstOnly flag
+# - a (possibly empty) set of transformers (marcfieldspecs, custom functions, maps, transformers)
+# - a (default 'nil') default value
+# 
+# So...what's a transformer?
+# 
+# - a marcfieldspec -- marc('245') 
+# - an adder function -- add(module, :function, *args) => function(doc,r,*args)
+# - a map  -- map('mapname) { noMapKeyDefault('blah'); passthrough :nomatch/:always/:never/false }
+# - a transform -- transform(module, :function, *args) => function(curVals)
+# 
+# These are applied in the order they're defined.
+# 
+# The maps also need to be pulled out into their own setup.
+# 
+# MAPS
+#   DefaultableMap -- an interface, defines #[key, default]; returns either the matched value or default
+#     ManyToManyMap < DefaultableMap -- many to many map (with default). Returns an array, always
+# 
+# MARCSpec
+#   Adder [option: firstOnly]
+#     MARCField [options: char(s), sub(s)]
+#       controlField  # marc('008') {chars 11..18}
+#       variableField # marc('245ab')
+#       leader        # marc('LDR') {char 3}
+#     Constant        # constant("Bill Dueber") or add("Bill", "Dueber")
+#     Custom          # custom(module, :function, *args)
+#     Default         # default "value"  # add the value iff @data is empty
+#   Transformer
+#     DefaultableMap [options: default, passthrough] # map(mapname)
+#       ManyToManyMap # translate(mapname) 
+#     Transform       # transform(module, :function, *args)
+#     Apply           # apply(:enumerableMethod, *args)
+#   ControlFlow
+#     Bail            # bail(module, :function, *args)
+# 
+# 
 
-So...what's a transformer?
-
-- a marcfieldspec -- marc('245') 
-- an adder function -- add(module, :function, *args) => function(doc,r,*args)
-- a map  -- map('mapname) { noMapKeyDefault('blah'); passthrough :nomatch/:always/:never/false }
-- a transform -- transform(module, :function, *args) => function(curVals)
-
-These are applied in the order they're defined.
-
-The maps also need to be pulled out into their own setup.
-
-MAPS
-  DefaultableMap -- an interface, defines #[key, default]; returns either the matched value or default
-    ManyToManyMap < DefaultableMap -- many to many map (with default). Returns an array, always
-
-MARCSpec
-  Adder [option: firstOnly]
-    MARCField [options: char(s), sub(s)]
-      controlField  # marc('008') {chars 11..18}
-      variableField # marc('245ab')
-      leader        # marc('LDR') {char 3}
-    Constant        # constant("Bill Dueber") or add("Bill", "Dueber")
-    Custom          # custom(module, :function, *args)
-    Default         # default "value"  # add the value iff @data is empty
-  Transformer
-    DefaultableMap [options: default, passthrough] # map(mapname)
-      ManyToManyMap # map(mapname) 
-    Transform       # transform(module, :function, *args)
-    Apply           # apply(:enumerableMethod, *args)
-  ControlFlow
-    Bail            # bail(module, :function, *args)
-
-
-
+# A way to call passed methods on the data
 module A                             
   def self.builtin arr, meth, *args    
     meth = [meth] unless meth.is_a? Array
@@ -45,4 +46,95 @@ module A
       arr.map! {|item| item.send(m, *args)}
     end
   end
+end
+
+# A way to call passed procs on the data (slow due to lambda?)
+# If we go this way, I should be able to write procs that not only
+# call my builtins like #marc, #custom, etc. but actually
+# maniuplate @data
+#
+# Just need to make sure that a call to a solr field name only occurs
+# in a limited way, so I can trap them all and make sure to clear out
+# @fielddata
+#
+# Hmmmm. Threadsafe, thought? Boy, I doubt it. 
+#
+# Crap. Is my *current* code thread-safe???? Check marc2solr!
+#
+# Yeah, it is, because it doesn't change any instance variables. But this thing --
+# I'm talking about allowing changes to session variables directly via
+# instance_eval. Hash on Thread.current.object_id? 
+
+
+# THIS CODE SEEMS TO WORK!!!!
+
+class SS # SpecSet
+  
+  def initialize 
+    @data = Hash.new {|hash, key| hash[key] = Array.new}
+    @r = {}
+    @doc = {}
+    
+    # No need to thread-protect procs/proclist since they'll be the same
+    # across all threads. Only the data, doc, and record need 
+    # protecting 
+    
+    @procs = {}
+    @proclist = []
+  end
+  
+  def addSolrField sym, &blk
+    @proclist << sym
+    @procs[sym] = blk  
+  end
+
+  # Set up thread-safety for the data, record, and doc
+  def data 
+    @data[Thread.current.object_id]
+  end
+  
+  def data= arr
+    @data[Thread.current.object_id] = arr
+  end
+  
+  def record
+    @r[Thread.current.object_id]
+  end
+  
+  def record= r
+    @r[Thread.current.object_id] = r
+  end
+  
+  def doc
+    @doc[Thread.current.object_id]
+  end
+  
+  def doc= doc
+    @doc[Thread.current.object_id] = doc
+  end
+  
+  def marc fld
+    self.data <<  "Marc field #{fld}"
+  end
+  
+  def hash_from_marc r
+    
+    # Set things up, thread-safe style
+    self.record = r 
+    self.doc = Hash.new {|hash, key| hash[key] = Array.new}
+    
+    # Loop through the procs and call eval
+    # them one at a time.
+    #
+    # Each proc represents a solr field
+    
+    @proclist.each do |p|
+      self.data = []  # thread-safe haven for current solrfield values
+      proc = @procs[p]
+      self.instance_eval &proc
+      self.doc[p.to_s] = self.data
+    end
+    return self.doc
+  end
+
 end
